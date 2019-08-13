@@ -4,3 +4,8 @@
 
 ## Libs to use
 * [GIF-Decoder](https://github.com/pixelmatix/AnimatedGIFs)
+* [JavaScript engine](https://duktape.org/)
+* [HTML layout engine](https://github.com/facebook/yoga)
+
+## Tests
+* [Acid Test 1](http://www.acidtests.org/)
