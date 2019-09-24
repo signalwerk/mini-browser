@@ -25,6 +25,8 @@ class Parser {
     string parse_tag_name();
     string parse_text();
     std::map<std::string, std::string> parse_attributes ();
+    std::pair<string, string> parse_attr();
+    string parse_attr_value ();
 
 };
 
@@ -214,8 +216,67 @@ string Parser::consume_char() {
 
 std::map<std::string, std::string> Parser::parse_attributes () {
   std::map<std::string, std::string> attributes;
+
+  for( ; ; ) {
+
+    consume_whitespace();
+
+    if(buffer[0] == '>') {
+      break;
+    }
+
+    std::pair<string, string> data = parse_attr();
+    attributes[std::get<0>(data)] = std::get<1>(data);
+
+  }
   return attributes;
 }
+
+std::pair<string, string> Parser::parse_attr () {
+  string name = parse_tag_name();
+
+
+  if (consume_char() != "=") {
+    throw std::runtime_error ("after attribute-name there has to be an =");
+  }
+  string value = parse_attr_value();
+
+  return {name, value};
+
+}
+
+string Parser::parse_attr_value () {
+  string open_quote = consume_char();
+
+  if (open_quote[0] != '"' && open_quote[0] != '\'') {
+    throw std::runtime_error ("attribute values have to be quoted");
+  }
+
+
+
+  string text;
+
+  for( ; ; ) {
+
+    if(buffer.length() == 0) {
+      read();
+    }
+
+    if(buffer[0] != open_quote[0]) {
+      text += consume_char();
+    } else {
+      break;
+    }
+  }
+
+  if (consume_char() != open_quote) {
+    throw std::runtime_error ("attribute values have to start and end with the same quote-style");
+  }
+
+  return text;
+
+}
+
 
 
 // Parse a single element, including its open tag, contents, and closing tag.

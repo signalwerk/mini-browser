@@ -25,9 +25,9 @@ class Dom {
     void text(string);
     std::vector<Dom> children; //parsed DOM (result of parser)
 
-    std::string get_attribute(std::string key);
-    bool has_attribute(std::string key);
-    void add_attribute(std::string key, std::string value);
+    std::string get_attribute(std::string name);
+    bool has_attribute(std::string name);
+    void add_attribute(std::string name, std::string value);
     void attributes(std::map<std::string, std::string> attributes);
 };
 
@@ -36,17 +36,17 @@ void Dom::attributes(std::map<std::string, std::string> attributes){
 }
 
 
-std::string Dom::get_attribute(std::string key){
-	if (_attributes.count(key) > 0){
-		return _attributes[key];
+std::string Dom::get_attribute(std::string name){
+	if (_attributes.count(name) > 0){
+		return _attributes[name];
 	} else {
 		return std::string("");
 	}
 }
 
 
-void Dom::add_attribute(std::string key, std::string value){
-	_attributes[key] = value;
+void Dom::add_attribute(std::string name, std::string value){
+	_attributes[name] = value;
 }
 
 
@@ -76,7 +76,7 @@ void Dom::print(int indent = 0) {
   		// Accessing VALUE from element pointed by it.
   		std::string count = it->second;
 
-  		std::cout  << string(indent, ' ') << "    { key: '" << word << "', value: '" << count << "' }," << std::endl;
+  		std::cout  << string(indent, ' ') << "    { name: '" << word << "', value: '" << count << "' }," << std::endl;
 
   		// Increment the Iterator to point to next entry
   		it++;

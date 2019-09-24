@@ -14,7 +14,7 @@ int main() {
   try {
     // test for self closing tags
     // Html html ("    <html>test <b>bold</b> text  <img href='http://'>image tag</img> text </html>");
-    Html html ("    <html>test <b>bold</b> text  <img>image tag</img> text </html>");
+    Html html ("    <html lang='de'>test <b>bold</b> text  <img>image tag</img> text </html>");
   } catch(const std::exception& e) {
       std::cout << e.what() << '\n';
       throw;   // rethrows the exception object of type std::length_error
