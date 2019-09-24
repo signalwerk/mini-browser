@@ -134,8 +134,11 @@ Dom Parser::parse_node() {
   Dom dom;
   if (buffer[0] == '<') {
     dom = parse_element();
+    dom.type(static_cast<int>(DomType::ELEMENT));
+
   } else {
     std::cout << "start parse text" << std::endl;
+    dom.type(static_cast<int>(DomType::TEXT));
     dom.text(parse_text());
   }
 
