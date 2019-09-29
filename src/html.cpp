@@ -1,9 +1,9 @@
-#include "parser.cpp"
+#include "parserHtml.cpp"
 #include <string>
 
 class Html {
   int width, height;
-  Parser parser;
+  HTMLParser parser;
 
 public:
   Html(string);

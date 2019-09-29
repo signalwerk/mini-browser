@@ -1,3 +1,8 @@
+
+#ifndef DOM_INCLUDED
+#define DOM_INCLUDED
+
+
 #include <iostream>
 #include <map>
 #include <string>
@@ -97,3 +102,5 @@ void Dom::tagname(string newName) { name = newName; }
 string Dom::tagname() { return name; }
 
 void Dom::text(string newText) { _text = newText; }
+
+#endif
