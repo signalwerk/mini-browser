@@ -1,3 +1,6 @@
+#ifndef _mb_parser_html_
+#define _mb_parser_html_
+
 #include "dom.cpp"
 #include "parser.cpp"
 #include <iostream>
@@ -235,3 +238,4 @@ Dom HTMLParser::parse_element() {
 
   return dom;
 }
+#endif

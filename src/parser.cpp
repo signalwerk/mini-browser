@@ -1,3 +1,6 @@
+#ifndef _mb_parser_
+#define _mb_parser_
+
 #include "dom.cpp"
 #include <iostream>
 #include <string>
@@ -83,3 +86,5 @@ string Parser::consume_char() {
 
   throw std::runtime_error("buffer empty – EOF?");
 }
+
+#endif

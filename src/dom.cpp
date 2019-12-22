@@ -1,6 +1,5 @@
-
-#ifndef DOM_INCLUDED
-#define DOM_INCLUDED
+#ifndef _mb_dom_
+#define _mb_dom_
 
 
 #include <iostream>

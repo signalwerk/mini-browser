@@ -1,3 +1,7 @@
+#ifndef _mb_html_
+#define _mb_html_
+
+
 #include "parserHtml.cpp"
 #include <string>
 
@@ -16,3 +20,5 @@ void Html::set_values(int x, int y) {
 }
 
 Html::Html(string html) { parser.feed(html); }
+
+#endif
