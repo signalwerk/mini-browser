@@ -11,8 +11,6 @@ public:
   Css(string);
 };
 
-
 Css::Css(string css) { parser.feed(css); }
-
 
 #endif

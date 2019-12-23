@@ -12,8 +12,9 @@ class HTMLParser : public Parser {
   std::vector<Dom> nodes; // parsed DOM (result of parser)
 
 public:
-  HTMLParser();              // constructor
-  void feed(string);         // feed the HTML string to the class
+  HTMLParser();                // constructor
+  void print(ofstream &oFile); // std out print
+  void feed(string);           // feed the HTML string to the class
   vector<Dom> parse_nodes(); // Parse the html document -> nodes = root element
   Dom parse_node();          // parse current node
   Dom parse_element();       // Parse a single element, including its open tag,
@@ -31,12 +32,18 @@ void HTMLParser::feed(string html) {
   cout << "HTML feeded: " << html << endl;
   input = html;
   nodes = parse_nodes();
+}
+
+void HTMLParser::print(ofstream &oFile) {
 
   // print now the result
-  for (Dom &e : nodes) {
-    std::cout << "print" << std::endl;
-    e.print();
-  }
+  // for (Dom &e : nodes) {
+  //   std::cout << "print" << std::endl;
+  //   e.print(oFile);
+  // }
+
+  // print first node
+  nodes.front().print(oFile, 0, true);
 }
 
 /// Parse a sequence of sibling nodes.

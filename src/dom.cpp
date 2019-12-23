@@ -1,11 +1,12 @@
 #ifndef _mb_dom_
 #define _mb_dom_
 
-
 #include <iostream>
 #include <map>
 #include <string>
 #include <vector>
+
+#include <fstream> // std::ofstream
 
 enum class DomType { ELEMENT, TEXT };
 
@@ -17,7 +18,7 @@ class Dom {
 
 public:
   Dom();
-  void print(int indent);
+  void print(std::ofstream &, int, bool);
   void tagname(string);
   string tagname();
 
@@ -53,17 +54,18 @@ Dom::Dom() {
   // add_attribute("href", "http");
 }
 
-void Dom::print(int indent = 0) {
-  cout << string(indent, ' ') << "{" << endl;
+void Dom::print(std::ofstream &oFile, int indent = 0, bool last = false) {
+  oFile << string(indent, ' ') << "{" << endl;
 
   if (_type == static_cast<int>(DomType::TEXT)) {
-    cout << string(indent, ' ') << "  type: 'TEXT'," << endl;
-    cout << string(indent, ' ') << "  text: '" << _text << "'," << endl;
+    oFile << string(indent, ' ') << "  \"type\": \"TEXT\"," << endl;
+    oFile << string(indent, ' ') << "  \"text\": \"" << _text << "\"" << endl;
   } else if (_type == static_cast<int>(DomType::ELEMENT)) {
-    cout << string(indent, ' ') << "  type: 'ELEMENT'," << endl;
-    cout << string(indent, ' ') << "  tagname: '" << name << "'," << endl;
+    oFile << string(indent, ' ') << "  \"type\": \"ELEMENT\"," << endl;
+    oFile << string(indent, ' ') << "  \"tagname\": \"" << name << "\","
+          << endl;
 
-    std::cout << string(indent, ' ') << "  attributes: [" << std::endl;
+    oFile << string(indent, ' ') << "  \"attributes\": [" << std::endl;
 
     std::map<std::string, std::string>::iterator it = _attributes.begin();
     while (it != _attributes.end()) {
@@ -73,23 +75,44 @@ void Dom::print(int indent = 0) {
       // Accessing VALUE from element pointed by it.
       std::string count = it->second;
 
-      std::cout << string(indent, ' ') << "    { name: '" << word
-                << "', value: '" << count << "' }," << std::endl;
+      oFile << string(indent, ' ') << "    { \"name\": \"" << word
+            << "\", \"value\": \"" << count << "\" }";
+
+      if (it != --_attributes.end()) {
+        oFile << ",";
+      }
+
+      oFile << std::endl;
 
       // Increment the Iterator to point to next entry
       it++;
     }
-    std::cout << string(indent, ' ') << "  ]," << std::endl;
 
-    cout << string(indent, ' ') << "  children: [" << endl;
-    // print now the result
+    oFile << string(indent, ' ') << "  ]," << std::endl;
+
+    oFile << string(indent, ' ') << "  \"children\": [" << endl;
+
     for (Dom &e : children) {
-      e.print(indent + 4);
+
+      if (&e == &children.back()) {
+        e.print(oFile, indent + 4, true);
+      } else {
+        e.print(oFile, indent + 4);
+      }
     }
-    cout << string(indent, ' ') << "  ]," << endl;
+
+    oFile << string(indent, ' ') << "  ]";
+
+    oFile << endl;
   }
 
-  cout << string(indent, ' ') << "}," << endl;
+  oFile << string(indent, ' ') << "}";
+
+  if (!last) {
+    oFile << ",";
+  }
+
+  oFile << endl;
 }
 
 void Dom::type(int newType) { _type = newType; }

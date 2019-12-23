@@ -1,0 +1,45 @@
+{
+  "type": "ELEMENT",
+  "tagname": "html",
+  "attributes": [
+    { "name": "lang", "value": "de" }
+  ],
+  "children": [
+    {
+      "type": "TEXT",
+      "text": "2test "
+    },
+    {
+      "type": "ELEMENT",
+      "tagname": "b",
+      "attributes": [
+      ],
+      "children": [
+        {
+          "type": "TEXT",
+          "text": "bold"
+        }
+      ]
+    },
+    {
+      "type": "TEXT",
+      "text": "text  "
+    },
+    {
+      "type": "ELEMENT",
+      "tagname": "img",
+      "attributes": [
+      ],
+      "children": [
+        {
+          "type": "TEXT",
+          "text": "image tag"
+        }
+      ]
+    },
+    {
+      "type": "TEXT",
+      "text": "text "
+    }
+  ]
+}

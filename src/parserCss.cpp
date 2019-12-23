@@ -1,7 +1,6 @@
 #ifndef _mb_parser_css_
 #define _mb_parser_css_
 
-
 #include "dom.cpp"
 #include "parser.cpp"
 #include <iostream>
@@ -210,23 +209,23 @@ vector<declaration> CSSParser::parse_declarations() {
 }
 
 declaration CSSParser::parse_declaration() {
-  declaration declaration;
-  declaration.name = parse_identifier();
+  declaration dec;
+  dec.name = parse_identifier();
 
   consume_whitespace();
-  if (consume_char() != ':') {
-    throw std::runtime_error("declaration needs to open with {");
-  }
-  
-  consume_whitespace();
-  declaration.value = parse_identifier();
-  consume_whitespace();
-
-  if (consume_char() != ';') {
+  if (consume_char() != ":") {
     throw std::runtime_error("declaration needs to open with {");
   }
 
-  return
+  consume_whitespace();
+  dec.value = parse_identifier();
+  consume_whitespace();
+
+  if (consume_char() != ";") {
+    throw std::runtime_error("declaration needs to open with {");
+  }
+
+  return dec;
 }
 
 #endif

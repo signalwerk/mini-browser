@@ -39,7 +39,7 @@ bool Parser::starts_with(string s) {
     return true;
   }
 
-  cout << "starts_with NOT found: " << s << endl;
+  cout << "starts_with not found: " << s << endl;
   return false;
 }
 
