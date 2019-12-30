@@ -1,0 +1,26 @@
+Total rules: : 3
+selectors: [
+  tag_name:h1
+  id:
+  _class:
+  tag_name:h2
+  id:
+  _class:
+  tag_name:h3
+  id:
+  _class:
+]
+selectors: [
+  tag_name:div
+  id:
+  _class:
+  tag_name:
+  id:
+  _class:
+]
+selectors: [
+  tag_name:
+  id:answer
+  _class:
+]
+]

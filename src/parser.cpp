@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+#define DEBUG_BASICS
+
 class Parser {
 
 protected:
@@ -35,11 +37,16 @@ bool Parser::starts_with(string s) {
 
   // comparison
   if (buffer.length() >= s.length() && s == buffer.substr(0, s.length())) {
+#ifndef DEBUG_BASICS
     cout << "starts_with found: " << s << endl;
+#endif
+
     return true;
   }
-
+#ifndef DEBUG_BASICS
   cout << "starts_with not found: " << s << endl;
+#endif
+
   return false;
 }
 
@@ -52,7 +59,11 @@ void Parser::consume_whitespace() {
     read();
     // if(buffer.length() > 0 && buffer[0] == ' ') {
     if (buffer.length() > 0 && isspace(static_cast<unsigned char>(buffer[0]))) {
+
+#ifndef DEBUG_BASICS
       std::cout << "skip whitespace" << std::endl;
+#endif
+
       buffer.erase(0, 1);
     } else {
       break;

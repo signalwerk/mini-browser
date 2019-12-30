@@ -29,7 +29,7 @@ public:
 HTMLParser::HTMLParser() { pos = 0; }
 
 void HTMLParser::feed(string html) {
-  cout << "HTML feeded: " << html << endl;
+  cout << "HTML feeded" << endl;
   input = html;
   nodes = parse_nodes();
 }

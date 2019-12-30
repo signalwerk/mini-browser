@@ -3,7 +3,7 @@
 
 using namespace std;
 
-// #include "css.cpp"
+#include "css.cpp"
 #include "html.cpp"
 
 #include <fstream>
@@ -15,6 +15,11 @@ string get_file_string(string filename) {
   std::ifstream ifs(filename);
   return string((std::istreambuf_iterator<char>(ifs)),
                 (std::istreambuf_iterator<char>()));
+}
+
+static bool endsWith(const std::string &str, const std::string &suffix) {
+  return str.size() >= suffix.size() &&
+         0 == str.compare(str.size() - suffix.size(), suffix.size(), suffix);
 }
 
 int main(int argc, char *argv[]) {
@@ -39,12 +44,28 @@ int main(int argc, char *argv[]) {
     //           "text </html>");
 
     std::string characters = get_file_string(inputFilename);
-    Html html(characters);
 
-    ofstream myfile;
-    myfile.open(outputFilename);
-    html.print(myfile);
-    myfile.close();
+    if (endsWith(inputFilename, "html")) {
+      cout << "-- HTML Parser --" << endl;
+
+      Html html(characters);
+
+      ofstream myfile;
+      myfile.open(outputFilename);
+      html.print(myfile);
+      myfile.close();
+
+    } else if (endsWith(inputFilename, "css")) {
+      cout << "-- CSS Parser --" << endl;
+
+      Css css(characters);
+
+      ofstream myfile;
+      myfile.open(outputFilename);
+
+      css.print(myfile);
+      myfile.close();
+    }
 
     // Css css("h1, h2, h3 { margin: auto; color: #cc0000; }");
   } catch (const std::exception &e) {
