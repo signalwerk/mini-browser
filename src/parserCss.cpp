@@ -276,56 +276,32 @@ atrule CSSParser::parse_atrule()
   consume_whitespace();
 
   // Parse the value
-  for (;;)
+  while (next() != '{')
   {
-
-    if (buffer.length() == 0)
-    {
-      read();
-    }
-
-    if (buffer[0] != '{')
-    {
-      a.value += consume_char();
-    }
-    else
-    {
-      break;
-    }
+    a.value += consume_char();
   }
 
   consume_char(); // Consume the '{'
 
   // Parse inner entities while the buffer doesn't reach a closing '}'
 
-  for (;;)
+  while (next() != '}')
   {
 
-    if (buffer.length() == 0)
-    {
-      read();
-    }
+    consume_whitespace();
 
-    if (buffer[0] != '}')
+    if (buffer[0] == '@')
     {
-      consume_whitespace();
-
-      if (buffer[0] == '@')
-      {
-        a.innerEntities.push_back(new atrule(parse_atrule()));
-      }
-      else
-      {
-        a.innerEntities.push_back(new rule(parse_rule()));
-      }
-      consume_whitespace();
+      a.innerEntities.push_back(new atrule(parse_atrule()));
     }
     else
     {
-      break;
+      a.innerEntities.push_back(new rule(parse_rule()));
     }
+    consume_whitespace();
   }
 
+  // consume the '}'
   consume_char();
 
   return a;
@@ -432,23 +408,11 @@ string CSSParser::parse_value()
 
   string val;
 
-  for (;;)
+  while (next() != ';')
   {
-
-    if (buffer.length() == 0)
-    {
-      read();
-    }
-
-    if (buffer[0] != ';')
-    {
-      val += consume_char();
-    }
-    else
-    {
-      break;
-    }
+    val += consume_char();
   }
+
   std::cout << " val:" << val << std::endl;
 
   return val;
@@ -461,21 +425,17 @@ vector<declaration> CSSParser::parse_declarations()
 
   vector<declaration> declarations;
 
-  for (;;)
-  {
-    consume_whitespace();
-    if (buffer[0] == '}')
-    {
-      consume_char();
-      break;
-    }
-    declarations.push_back(parse_declaration());
+  consume_whitespace();
 
-    if (eof())
-    {
-      break;
-    }
+  while (next() != '}')
+  {
+
+    declarations.push_back(parse_declaration());
+    consume_whitespace();
   }
+
+  // consume the '}'
+  consume_char();
 
   return declarations;
 }

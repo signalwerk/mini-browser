@@ -22,11 +22,21 @@ public:
   bool starts_with(string);  // check if stream starts with current chars
   bool eof();                // are we eof
   void consume_whitespace(); // skip whitespace
+  char next();             // return the next character in the input stream
   string read();
   string consume_char();
 };
 
 Parser::Parser() { pos = 0; }
+
+char Parser::next()
+{
+  if (buffer.length() == 0)
+  {
+    read();
+  }
+  return buffer[0];
+}
 
 /// Does the current input start with the given string?
 bool Parser::starts_with(string s)
