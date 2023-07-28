@@ -22,7 +22,7 @@ public:
   bool starts_with(string);  // check if stream starts with current chars
   bool eof();                // are we eof
   void consume_whitespace(); // skip whitespace
-  char next();             // return the next character in the input stream
+  char next();               // return the next character in the input stream
   string read();
   string consume_char();
 };

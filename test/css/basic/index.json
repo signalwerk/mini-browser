@@ -1,6 +1,21 @@
 {
-  "total_rules": 4,
+  "total_rules": 5,
   "entities": [
+    {
+      "selectors": [
+        {
+          "tag_name": "div",
+          "id": "",
+          "_class": []
+        }
+      ],
+      "declarations": [
+        {
+          "name": "display",
+          "value": "none"
+        }
+      ]
+    },
     {
       "selectors": [
         {
@@ -22,7 +37,7 @@
       "declarations": [
         {
           "name": "margin",
-          "value": "auto"
+          "value": "auto  "
         },
         {
           "name": "color",
@@ -34,11 +49,6 @@
       "selectors": [
         {
           "tag_name": "div",
-          "id": "",
-          "_class": []
-        },
-        {
-          "tag_name": "",
           "id": "",
           "_class": ["note"]
         }

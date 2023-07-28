@@ -1,9 +1,19 @@
+/* comment */
+div tag#id.class1.class2.class3 {
+  display: none;
+}
+
+/* comment */
 h1,
 h2,
-h3 {
-  margin: auto;
+h3 /* comment */ /* comment *//* comment */{
+  /* comment *//* comment */ /* comment */
+ /* comment */ /* comment *//* comment */margin: /* comment */    /* comment */ auto /* comment *//* comment */ /* comment */;/* comment */
+
+  /* comment */
   color: #cc0000;
 }
+
 div.note {
   margin-bottom: 20px;
   padding: 10px;

@@ -9,11 +9,13 @@
 
 const string INDENT = "  "; // 2 spaces for indentation
 
+// Modified selector structure to support compound selectors
 struct selector
 {
   string tag_name;
   string id;
   vector<string> _class;
+  vector<selector> descendants; // For supporting compound selectors
 };
 
 struct declaration
@@ -46,21 +48,19 @@ struct stylesheet
   vector<CSSEntity *> entities; // Will contain both rules and atrules
 };
 
-// enum selector {
-//     Simple(Simpleselector),
-// }
-
 class CSSParser : public Parser
 {
-
   stylesheet stylesheet; // parsed DOM (result of parser)
 
 public:
-  CSSParser();                                                   // constructor
-  ~CSSParser();                                                  // destructor
-  void print(ofstream &oFile, const string &prefix);             // std out print
-  void print(ofstream &oFile, rule &rule, const string &prefix); // std out print
+  CSSParser();         // constructor
+  ~CSSParser();        // destructor
+  bool skip_comment(); // Skip over comments
+  void consume_void(); // Skip over comments and whitespace.
+  void print(ofstream &oFile, const string &prefix);
+  void print(ofstream &oFile, rule &rule, const string &prefix);
   void print_atrule(ofstream &oFile, const atrule &a, const string &prefix);
+  // void print_descendant(ofstream &oFile, vector<SimpleSelector> &descendants, const string &prefix);
 
   void feed(string); // feed the CSS string to the class
   void parse_rules();
@@ -85,8 +85,41 @@ void CSSParser::feed(string css)
   cout << "CSS feeded" << endl;
   input = css;
   parse_rules();
-
   cout << "end css parser " << endl;
+}
+
+// Comment handling
+bool CSSParser::skip_comment()
+{
+  if (starts_with("/*"))
+  {
+    consume_char();
+    consume_char();
+    while (!starts_with("*/"))
+    {
+      consume_char();
+    }
+    consume_char(); // consume '*'
+    consume_char(); // consume '/'
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+// consume comments and whitespaces
+void CSSParser::consume_void()
+{
+  while (true)
+  {
+    consume_whitespace();
+    if (!skip_comment())
+    {
+      break;
+    }
+  }
 }
 
 void CSSParser::print(ofstream &oFile, const string &prefix = "")
@@ -140,11 +173,6 @@ void CSSParser::print(ofstream &oFile, rule &rule, const string &prefix = "")
     oFile << prefix << INDENT << INDENT << INDENT << "\"tag_name\": \"" << sel.tag_name << "\"," << std::endl;
     oFile << prefix << INDENT << INDENT << INDENT << "\"id\": \"" << sel.id << "\"," << std::endl;
     oFile << prefix << INDENT << INDENT << INDENT << "\"_class\": [";
-
-    // if (sel._class.size() > 0)
-    // {
-    //   oFile << std::endl;
-    // }
 
     for (size_t j = 0; j < sel._class.size(); j++)
     {
@@ -212,7 +240,7 @@ void CSSParser::parse_rules()
 {
   for (;;)
   {
-    consume_whitespace();
+    consume_void();
     if (buffer[0] == '@')
     {
       stylesheet.entities.push_back(new atrule(parse_atrule()));
@@ -247,19 +275,19 @@ vector<selector> CSSParser::parse_selectors()
   {
     std::cout << "consume selectors" << std::endl;
     selectors.push_back(parse_selector());
-    consume_whitespace();
+    consume_void();
 
     if (buffer[0] == ',')
     {
       consume_char();
-      consume_whitespace();
+      consume_void();
     }
 
     if (buffer[0] == '{')
     {
 
       consume_char();
-      consume_whitespace();
+      consume_void();
       break;
 
       // throw std::runtime_error("Unexpected character {} in selector list");
@@ -285,7 +313,7 @@ atrule CSSParser::parse_atrule()
 
   // Parse the keyword
   a.keyword = parse_identifier();
-  consume_whitespace();
+  consume_void();
 
   // Parse the value
   while (next() != '{')
@@ -300,7 +328,7 @@ atrule CSSParser::parse_atrule()
   while (next() != '}')
   {
 
-    consume_whitespace();
+    consume_void();
 
     if (buffer[0] == '@')
     {
@@ -310,7 +338,7 @@ atrule CSSParser::parse_atrule()
     {
       a.innerEntities.push_back(new rule(parse_rule()));
     }
-    consume_whitespace();
+    consume_void();
   }
 
   // consume the '}'
@@ -321,39 +349,45 @@ atrule CSSParser::parse_atrule()
 
 selector CSSParser::parse_selector()
 {
+  selector currentSelector;
 
-  selector selector;
-
-  std::cout << "consume selector" << std::endl;
-
-  consume_whitespace();
-
-  if (buffer[0] == '#')
+  consume_void();
+  while (true)
   {
+    if (buffer[0] == '#')
+    {
+      consume_char();
+      currentSelector.id = parse_identifier();
+    }
+    else if (buffer[0] == '.')
+    {
+      consume_char();
+      currentSelector._class.push_back(parse_identifier());
+    }
+    else if (buffer[0] == '*')
+    {
+      // universal selector
+      consume_char();
+    }
+    else if (isspace(buffer[0]))
+    {
+      consume_void();
+      currentSelector.descendants.push_back(parse_selector());
+    }
+    else
+    {
+      currentSelector.tag_name = parse_identifier();
+    }
 
-    consume_char();
-    selector.id = parse_identifier();
-  }
-  else if (buffer[0] == '.')
-  {
-
-    consume_char();
-    selector._class.push_back(parse_identifier());
-  }
-  else if (buffer[0] == '*')
-  {
-    // universal selector
-    consume_char();
-  }
-  else
-  {
-
-    // todo valid_identifier_char(c)
-    // throw std::runtime_error("Unexpected character {} in selector list");
-    selector.tag_name = parse_identifier();
+    // Check if a compound selector follows
+    char nextChar = next();
+    if (nextChar == ',' || nextChar == '{')
+    {
+      break;
+    }
   }
 
-  return selector;
+  return currentSelector;
 }
 
 string CSSParser::parse_identifier()
@@ -422,7 +456,10 @@ string CSSParser::parse_value()
 
   while (next() != ';')
   {
-    val += consume_char();
+    if (!skip_comment())
+    {
+      val += consume_char();
+    }
   }
 
   std::cout << " val:" << val << std::endl;
@@ -437,13 +474,13 @@ vector<declaration> CSSParser::parse_declarations()
 
   vector<declaration> declarations;
 
-  consume_whitespace();
+  consume_void();
 
   while (next() != '}')
   {
 
     declarations.push_back(parse_declaration());
-    consume_whitespace();
+    consume_void();
   }
 
   // consume the '}'
@@ -457,15 +494,15 @@ declaration CSSParser::parse_declaration()
   declaration dec;
   dec.name = parse_attr();
 
-  consume_whitespace();
+  consume_void();
   if (consume_char() != ":")
   {
     throw std::runtime_error("attribute needs to end with :");
   }
 
-  consume_whitespace();
+  consume_void();
   dec.value = parse_value();
-  consume_whitespace();
+  consume_void();
 
   if (consume_char() != ";")
   {
