@@ -7,14 +7,7 @@
           "tag_name": "h1",
           "id": "",
           "_class": [],
-          "descendants": [
-            {
-              "tag_name": "",
-              "id": "",
-              "_class": [],
-              "descendants": []
-            }
-          ]
+          "descendants": []
         }
       ],
       "declarations": [
@@ -35,14 +28,7 @@
               "tag_name": "a",
               "id": "",
               "_class": [],
-              "descendants": [
-                {
-                  "tag_name": "",
-                  "id": "",
-                  "_class": [],
-                  "descendants": []
-                }
-              ]
+              "descendants": []
             }
           ]
         }
@@ -70,14 +56,7 @@
                   "tag_name": "a",
                   "id": "",
                   "_class": [],
-                  "descendants": [
-                    {
-                      "tag_name": "",
-                      "id": "",
-                      "_class": [],
-                      "descendants": []
-                    }
-                  ]
+                  "descendants": []
                 }
               ]
             }
@@ -97,14 +76,7 @@
           "tag_name": "",
           "id": "id",
           "_class": [],
-          "descendants": [
-            {
-              "tag_name": "",
-              "id": "",
-              "_class": [],
-              "descendants": []
-            }
-          ]
+          "descendants": []
         }
       ],
       "declarations": [
@@ -125,14 +97,7 @@
               "tag_name": "a",
               "id": "",
               "_class": [],
-              "descendants": [
-                {
-                  "tag_name": "",
-                  "id": "",
-                  "_class": [],
-                  "descendants": []
-                }
-              ]
+              "descendants": []
             }
           ]
         }
@@ -150,14 +115,7 @@
           "tag_name": "",
           "id": "",
           "_class": ["class"],
-          "descendants": [
-            {
-              "tag_name": "",
-              "id": "",
-              "_class": [],
-              "descendants": []
-            }
-          ]
+          "descendants": []
         }
       ],
       "declarations": [
@@ -173,14 +131,7 @@
           "tag_name": "",
           "id": "",
           "_class": ["class1", "class2", "class3"],
-          "descendants": [
-            {
-              "tag_name": "",
-              "id": "",
-              "_class": [],
-              "descendants": []
-            }
-          ]
+          "descendants": []
         }
       ],
       "declarations": [
@@ -201,14 +152,7 @@
               "tag_name": "a",
               "id": "",
               "_class": [],
-              "descendants": [
-                {
-                  "tag_name": "",
-                  "id": "",
-                  "_class": [],
-                  "descendants": []
-                }
-              ]
+              "descendants": []
             }
           ]
         }
@@ -226,14 +170,7 @@
           "tag_name": "div",
           "id": "id",
           "_class": ["class"],
-          "descendants": [
-            {
-              "tag_name": "",
-              "id": "",
-              "_class": [],
-              "descendants": []
-            }
-          ]
+          "descendants": []
         }
       ],
       "declarations": [
@@ -254,14 +191,7 @@
               "tag_name": "a",
               "id": "",
               "_class": ["class1", "class2", "class3"],
-              "descendants": [
-                {
-                  "tag_name": "",
-                  "id": "",
-                  "_class": [],
-                  "descendants": []
-                }
-              ]
+              "descendants": []
             }
           ]
         }
@@ -293,14 +223,7 @@
           "tag_name": "h3",
           "id": "",
           "_class": [],
-          "descendants": [
-            {
-              "tag_name": "",
-              "id": "",
-              "_class": [],
-              "descendants": []
-            }
-          ]
+          "descendants": []
         }
       ],
       "declarations": [
@@ -324,14 +247,7 @@
               "tag_name": "h1",
               "id": "",
               "_class": [],
-              "descendants": [
-                {
-                  "tag_name": "",
-                  "id": "",
-                  "_class": [],
-                  "descendants": []
-                }
-              ]
+              "descendants": []
             }
           ],
           "declarations": [
@@ -353,14 +269,7 @@
               "tag_name": "h1",
               "id": "",
               "_class": [],
-              "descendants": [
-                {
-                  "tag_name": "",
-                  "id": "",
-                  "_class": [],
-                  "descendants": []
-                }
-              ]
+              "descendants": []
             }
           ],
           "declarations": [

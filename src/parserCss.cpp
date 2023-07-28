@@ -368,52 +368,41 @@ selector CSSParser::parse_selector()
   consume_void();
   while (true)
   {
-    if (buffer[0] == '#')
-    {
-      consume_char();
-      currentSelector.id = parse_identifier();
-    }
-    else if (buffer[0] == '.')
-    {
-      consume_char();
-      currentSelector._class.push_back(parse_identifier());
-    }
-    else if (buffer[0] == '*')
-    {
-      // universal selector
-      consume_char();
-    }
-    else if (isspace(buffer[0]))
-    {
-      consume_void();
-      currentSelector.descendants.push_back(parse_selector());
-    }
-    else
-    {
-      currentSelector.tag_name = parse_identifier();
-    }
-
-    // Check if a compound selector follows
     char nextChar = next();
     if (nextChar == ',' || nextChar == '{')
     {
       break;
     }
-  }
 
-  // Check for descendants
-  while (true)
-  {
-    consume_void(); // Eat up whitespace
-
-    if (next() == ',' || next() == '{')
+    if (nextChar == '#')
     {
-      // Stop parsing if next character is ',' or '{' (end of selector or start of declaration block)
-      break;
+      consume_char();
+      currentSelector.id = parse_identifier();
     }
+    else if (nextChar == '.')
+    {
+      consume_char();
+      currentSelector._class.push_back(parse_identifier());
+    }
+    else if (nextChar == '*')
+    {
+      // universal selector
+      consume_char();
+    }
+    else if (isspace(nextChar))
+    {
+      consume_void();
 
-    selector descendant = parse_selector(); // Recursive call to handle the next selector in the sequence
-    currentSelector.descendants.push_back(descendant);
+      char nextChar = next();
+      if (nextChar != ',' && nextChar != '{')
+      {
+        currentSelector.descendants.push_back(parse_selector());
+      }
+    }
+    else
+    {
+      currentSelector.tag_name = parse_identifier();
+    }
   }
 
   return currentSelector;
