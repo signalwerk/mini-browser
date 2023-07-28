@@ -7,6 +7,8 @@
 #include <string>
 #include <vector>
 
+const string INDENT = "  "; // 2 spaces for indentation
+
 struct selector
 {
   string tag_name;
@@ -54,11 +56,11 @@ class CSSParser : public Parser
   stylesheet stylesheet; // parsed DOM (result of parser)
 
 public:
-  CSSParser();                             // constructor
-  ~CSSParser();                            // destructor
-  void print(ofstream &oFile);             // std out print
-  void print(ofstream &oFile, rule &rule); // std out print
-  void print_atrule(ofstream &oFile, const atrule &a);
+  CSSParser();                                                   // constructor
+  ~CSSParser();                                                  // destructor
+  void print(ofstream &oFile, const string &prefix);             // std out print
+  void print(ofstream &oFile, rule &rule, const string &prefix); // std out print
+  void print_atrule(ofstream &oFile, const atrule &a, const string &prefix);
 
   void feed(string); // feed the CSS string to the class
   void parse_rules();
@@ -87,7 +89,7 @@ void CSSParser::feed(string css)
   cout << "end css parser " << endl;
 }
 
-void CSSParser::print(ofstream &oFile)
+void CSSParser::print(ofstream &oFile, const string &prefix = "")
 {
   size_t ruleCount = 0;
   for (auto entity : stylesheet.entities)
@@ -98,100 +100,110 @@ void CSSParser::print(ofstream &oFile)
     }
   }
 
-  oFile << "{" << endl;
-  oFile << "  \"total_rules\": " << ruleCount << "," << endl;
-  oFile << "  \"entities\": [" << endl;
+  oFile << prefix << "{" << endl;
+  oFile << prefix << INDENT << "\"total_rules\": " << ruleCount << "," << endl;
+  oFile << prefix << INDENT << "\"entities\": [" << endl;
 
   for (size_t i = 0; i < stylesheet.entities.size(); ++i)
   {
-
     if (i != 0)
-      oFile << "," << endl; // Separate entities with commas
-
-    oFile << "    "; // Indent each rule
+      oFile << "," << endl;
 
     if (auto r = dynamic_cast<rule *>(stylesheet.entities[i]))
     {
-      print(oFile, *r);
+      print(oFile, *r, prefix + INDENT + INDENT);
     }
     else if (auto a = dynamic_cast<atrule *>(stylesheet.entities[i]))
     {
-      print_atrule(oFile, *a);
+      print_atrule(oFile, *a, prefix + INDENT + INDENT);
     }
   }
 
   oFile << endl
-        << "  ]" << endl;
-  oFile << "}" << endl;
+        << prefix << INDENT << "]" << endl;
+  oFile << prefix << "}" << endl;
 }
 
-void CSSParser::print(ofstream &oFile, rule &rule)
+void CSSParser::print(ofstream &oFile, rule &rule, const string &prefix = "")
 {
   vector<selector> &s = rule.selectors;
   vector<declaration> &d = rule.declarations;
 
-  oFile << "{" << endl;
+  oFile << prefix << "{" << endl;
 
   // Print selectors
-  oFile << "      \"selectors\": [" << endl; // Additional indentation
+  oFile << prefix << INDENT << "\"selectors\": [" << endl; // Additional indentation
   for (size_t i = 0; i < s.size(); i++)
   {
     selector &sel = s[i];
-    oFile << "        {" << endl;
-    oFile << "          \"tag_name\": \"" << sel.tag_name << "\"," << std::endl;
-    oFile << "          \"id\": \"" << sel.id << "\"," << std::endl;
-    oFile << "          \"_class\": [";
+    oFile << prefix << INDENT << INDENT << "{" << endl;
+    oFile << prefix << INDENT << INDENT << INDENT << "\"tag_name\": \"" << sel.tag_name << "\"," << std::endl;
+    oFile << prefix << INDENT << INDENT << INDENT << "\"id\": \"" << sel.id << "\"," << std::endl;
+    oFile << prefix << INDENT << INDENT << INDENT << "\"_class\": [";
+
+    // if (sel._class.size() > 0)
+    // {
+    //   oFile << std::endl;
+    // }
+
     for (size_t j = 0; j < sel._class.size(); j++)
     {
       oFile << "\"" << sel._class[j] << "\"";
       if (j < sel._class.size() - 1)
-        oFile << ", ";
+      {
+        oFile << prefix << ",";
+      }
     }
-    oFile << "]";
-    oFile << (i < s.size() - 1 ? "        }," : "        }") << std::endl; // Close selector object
+    oFile << "]" << endl;
+    oFile << prefix << INDENT << INDENT << (i < s.size() - 1 ? "}," : "}") << std::endl; // Close selector object
   }
-  oFile << "      ]," << endl;
+  oFile << prefix << INDENT << "]," << endl;
 
   // Print declarations
-  oFile << "      \"declarations\": [" << endl;
+  oFile << prefix << INDENT << "\"declarations\": [" << endl;
   for (size_t i = 0; i < d.size(); i++)
   {
     declaration &dec = d[i];
-    oFile << "        {\"name\": \"" << dec.name << "\", \"value\": \"" << dec.value << "\"}";
-    oFile << (i < d.size() - 1 ? "," : "") << std::endl;
+    oFile << prefix << INDENT << INDENT << "{" << endl
+          << prefix << INDENT << INDENT << INDENT << "\"name\": \"" << dec.name << "\"," << endl
+          << prefix << INDENT << INDENT << INDENT << "\"value\": \"" << dec.value << "\"" << endl
+          << prefix << INDENT << INDENT << "}" << (i < d.size() - 1 ? "," : "") << std::endl;
   }
-  oFile << "      ]" << endl;
+  oFile << prefix << INDENT << "]" << endl;
 
-  oFile << "    }"; // No newline here to handle comma placement in the parent print function
+  oFile << prefix << "}"; // No newline here to handle comma placement in the parent print function
 }
 
-void CSSParser::print_atrule(ofstream &oFile, const atrule &a)
+void CSSParser::print_atrule(ofstream &oFile, const atrule &a, const string &prefix = "")
 {
-  oFile << "{ \"@\" : \"" << a.keyword << "\", \"value\": \"" << a.value << "\"";
+  oFile << prefix << "{" << endl;
+
+  oFile << prefix << INDENT << "\"keyword\": \"" << a.keyword << "\"," << endl;
+  oFile << prefix << INDENT << "\"value\": \"" << a.value << "\"";
 
   // Check if the atrule has inner content
   if (!a.innerEntities.empty())
   {
+    oFile << "," << endl;
+    oFile << prefix << INDENT << "\"content\": [" << endl;
+    for (size_t i = 0; i < a.innerEntities.size(); ++i)
     {
-      oFile << ", \"content\": [";
-      for (size_t i = 0; i < a.innerEntities.size(); ++i)
+      if (i != 0)
+        oFile << "," << endl;
+
+      if (auto r = dynamic_cast<rule *>(a.innerEntities[i]))
       {
-        if (i != 0)
-          oFile << "," << endl;
-
-        if (auto r = dynamic_cast<rule *>(a.innerEntities[i]))
-        {
-          print(oFile, *r);
-        }
-        else if (auto innerA = dynamic_cast<atrule *>(a.innerEntities[i]))
-        {
-          print_atrule(oFile, *innerA);
-        }
+        print(oFile, *r, prefix + INDENT + INDENT);
       }
-      oFile << "]";
+      else if (auto innerA = dynamic_cast<atrule *>(a.innerEntities[i]))
+      {
+        print_atrule(oFile, *innerA, prefix + INDENT + INDENT);
+      }
     }
+    oFile << endl;
+    oFile << prefix << INDENT << "]" << endl;
 
-    oFile << "}";
+    oFile << prefix << "}";
   }
 }
 

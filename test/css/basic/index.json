@@ -6,19 +6,28 @@
         {
           "tag_name": "h1",
           "id": "",
-          "_class": []        },
+          "_class": []
+        },
         {
           "tag_name": "h2",
           "id": "",
-          "_class": []        },
+          "_class": []
+        },
         {
           "tag_name": "h3",
           "id": "",
-          "_class": []        }
+          "_class": []
+        }
       ],
       "declarations": [
-        {"name": "margin", "value": "auto"},
-        {"name": "color", "value": "#cc0000"}
+        {
+          "name": "margin",
+          "value": "auto"
+        },
+        {
+          "name": "color",
+          "value": "#cc0000"
+        }
       ]
     },
     {
@@ -26,15 +35,23 @@
         {
           "tag_name": "div",
           "id": "",
-          "_class": []        },
+          "_class": []
+        },
         {
           "tag_name": "",
           "id": "",
-          "_class": ["note"]        }
+          "_class": ["note"]
+        }
       ],
       "declarations": [
-        {"name": "margin-bottom", "value": "20px"},
-        {"name": "padding", "value": "10px"}
+        {
+          "name": "margin-bottom",
+          "value": "20px"
+        },
+        {
+          "name": "padding",
+          "value": "10px"
+        }
       ]
     },
     {
@@ -42,54 +59,86 @@
         {
           "tag_name": "",
           "id": "answer",
-          "_class": []        }
+          "_class": []
+        }
       ],
       "declarations": [
-        {"name": "display", "value": "none"}
+        {
+          "name": "display",
+          "value": "none"
+        }
       ]
     },
-    { "@" : "media", "value": "only screen and (max-width: 600px) ", "content": [{
-      "selectors": [
+    {
+      "keyword": "media",
+      "value": "only screen and (max-width: 600px) ",
+      "content": [
         {
-          "tag_name": "body",
-          "id": "",
-          "_class": []        }
-      ],
-      "declarations": [
-        {"name": "background-color", "value": "lightblue"}
+          "selectors": [
+            {
+              "tag_name": "body",
+              "id": "",
+              "_class": []
+            }
+          ],
+          "declarations": [
+            {
+              "name": "background-color",
+              "value": "lightblue"
+            }
+          ]
+        },
+        {
+          "selectors": [
+            {
+              "tag_name": "h1",
+              "id": "",
+              "_class": []
+            }
+          ],
+          "declarations": [
+            {
+              "name": "background-color",
+              "value": "lightblue"
+            }
+          ]
+        }
       ]
     },
-{
-      "selectors": [
+    {
+      "keyword": "three-dee",
+      "value": "",
+      "content": [
         {
-          "tag_name": "h1",
-          "id": "",
-          "_class": []        }
-      ],
-      "declarations": [
-        {"name": "background-color", "value": "lightblue"}
+          "selectors": [
+            {
+              "tag_name": "h1",
+              "id": "",
+              "_class": []
+            }
+          ],
+          "declarations": [
+            {
+              "name": "color",
+              "value": "red"
+            }
+          ]
+        }
       ]
-    }]},
-    { "@" : "three-dee", "value": "", "content": [{
-      "selectors": [
-        {
-          "tag_name": "h1",
-          "id": "",
-          "_class": []        }
-      ],
-      "declarations": [
-        {"name": "color", "value": "red"}
-      ]
-    }]},
+    },
     {
       "selectors": [
         {
           "tag_name": "h3",
           "id": "",
-          "_class": []        }
+          "_class": []
+        }
       ],
       "declarations": [
-        {"name": "background-color", "value": "lightblue"}
+        {
+          "name": "background-color",
+          "value": "lightblue"
+        }
       ]
     }
   ]
