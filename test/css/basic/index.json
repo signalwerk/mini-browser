@@ -1,26 +1,52 @@
-Total rules: : 3
-selectors: [
-  tag_name:h1
-  id:
-  _class:
-  tag_name:h2
-  id:
-  _class:
-  tag_name:h3
-  id:
-  _class:
-]
-selectors: [
-  tag_name:div
-  id:
-  _class:
-  tag_name:
-  id:
-  _class:
-]
-selectors: [
-  tag_name:
-  id:answer
-  _class:
-]
-]
+{
+  "total_rules": 4,
+  "rules": [
+    {
+      "selectors": [
+        {
+          "tag_name": "h1",
+          "id": "",
+          "_class": []        },
+        {
+          "tag_name": "h2",
+          "id": "",
+          "_class": []        },
+        {
+          "tag_name": "h3",
+          "id": "",
+          "_class": []        }
+      ],
+      "declarations": [
+        {"name": "margin", "value": "auto"},
+        {"name": "color", "value": "#cc0000"}
+      ]
+    },
+    {
+      "selectors": [
+        {
+          "tag_name": "div",
+          "id": "",
+          "_class": []        },
+        {
+          "tag_name": "",
+          "id": "",
+          "_class": ["note"]        }
+      ],
+      "declarations": [
+        {"name": "margin-bottom", "value": "20px"},
+        {"name": "padding", "value": "10px"}
+      ]
+    },
+    {
+      "selectors": [
+        {
+          "tag_name": "",
+          "id": "answer",
+          "_class": []        }
+      ],
+      "declarations": [
+        {"name": "display", "value": "none"}
+      ]
+    }
+  ]
+}

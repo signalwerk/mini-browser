@@ -72,31 +72,66 @@ void CSSParser::feed(string css)
 
 void CSSParser::print(ofstream &oFile)
 {
+  oFile << "{" << endl;
+  oFile << "  \"total_rules\": " << stylesheet.rules.size() << "," << endl;
+  oFile << "  \"rules\": [" << endl;
 
-  oFile << "Total rules: : " << stylesheet.rules.size() << endl;
-
-  for (rule &r : stylesheet.rules)
+  for (size_t i = 0; i < stylesheet.rules.size(); i++)
   {
-    print(oFile, r);
+    oFile << "    "; // Indent each rule
+    print(oFile, stylesheet.rules[i]);
+    if (i < stylesheet.rules.size() - 1)
+    {
+      oFile << "," << endl;
+    }
+    else
+    {
+      oFile << endl;
+    }
   }
 
-  oFile << "]" << endl;
+  oFile << "  ]" << endl;
+  oFile << "}" << endl;
 }
 
 void CSSParser::print(ofstream &oFile, rule &rule)
 {
-
   vector<selector> &s = rule.selectors;
+  vector<declaration> &d = rule.declarations;
 
-  oFile << "selectors: [" << endl;
+  oFile << "{" << endl;
 
-  for (selector &sel : s)
+  // Print selectors
+  oFile << "      \"selectors\": [" << endl; // Additional indentation
+  for (size_t i = 0; i < s.size(); i++)
   {
-    oFile << "  tag_name:" << sel.tag_name << std::endl;
-    oFile << "  id:" << sel.id << std::endl;
-    oFile << "  _class:" << std::endl;
+    selector &sel = s[i];
+    oFile << "        {" << endl;
+    oFile << "          \"tag_name\": \"" << sel.tag_name << "\"," << std::endl;
+    oFile << "          \"id\": \"" << sel.id << "\"," << std::endl;
+    oFile << "          \"_class\": [";
+    for (size_t j = 0; j < sel._class.size(); j++)
+    {
+      oFile << "\"" << sel._class[j] << "\"";
+      if (j < sel._class.size() - 1)
+        oFile << ", ";
+    }
+    oFile << "]";
+    oFile << (i < s.size() - 1 ? "        }," : "        }") << std::endl; // Close selector object
   }
-  oFile << "]" << endl;
+  oFile << "      ]," << endl;
+
+  // Print declarations
+  oFile << "      \"declarations\": [" << endl;
+  for (size_t i = 0; i < d.size(); i++)
+  {
+    declaration &dec = d[i];
+    oFile << "        {\"name\": \"" << dec.name << "\", \"value\": \"" << dec.value << "\"}";
+    oFile << (i < d.size() - 1 ? "," : "") << std::endl;
+  }
+  oFile << "      ]" << endl;
+
+  oFile << "    }"; // No newline here to handle comma placement in the parent print function
 }
 
 /// Parse a sequence of rules.
