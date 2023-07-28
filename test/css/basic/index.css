@@ -1,42 +1,73 @@
-/* comment */
-div tag#id.class1.class2.class3 {
+/* tag selector */
+h1 {
+  display: none;
+}
+
+/* selector with descendant */
+p a {
+  display: none;
+}
+
+/* selector with descendants */
+div p a {
+  display: none;
+}
+
+/* id selector */
+#id {
+  display: none;
+}
+
+/* id selector with descendant */
+#id a {
+  display: none;
+}
+
+/* class selector */
+.class {
+  display: none;
+}
+
+/* multiple class selector */
+.class1.class2.class3 {
+  display: none;
+}
+
+/* multiple class selector with descendant */
+.class1.class2.class3 a {
+  display: none;
+}
+
+/* combination of tag class and id */
+div#id.class {
+  display: none;
+}
+
+/* combination of tag class and id with descendant */
+div#id.class a.class1.class2.class3 {
   display: none;
 }
 
 /* comment */
 h1,
 h2,
-h3 /* comment */ /* comment *//* comment */{
-  /* comment *//* comment */ /* comment */
- /* comment */ /* comment *//* comment */margin: /* comment */    /* comment */ auto /* comment *//* comment */ /* comment */;/* comment */
+h3 /* comment */ {
+  margin:   /* comment */ auto /* comment */ auto /* comment */;
 
   /* comment */
   color: #cc0000;
 }
 
-div.note {
-  margin-bottom: 20px;
-  padding: 10px;
-}
-#answer {
-  display: none;
-}
-
-@media only screen and (max-width: 600px) {
-  body {
-    background-color: lightblue;
-  }
-  h1 {
-    background-color: lightblue;
-  }
-}
-
+/* at-rule */
 @three-dee {
   h1 {
-    color: red;
+    display: none;
   }
 }
 
-h3 {
-  background-color: lightblue;
+/* at-rule with value*/
+@media only screen and (max-width: 600px) {
+  h1 {
+    display: none;
+  }
 }

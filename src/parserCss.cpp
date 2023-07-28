@@ -60,7 +60,7 @@ public:
   void print(ofstream &oFile, const string &prefix);
   void print(ofstream &oFile, rule &rule, const string &prefix);
   void print_atrule(ofstream &oFile, const atrule &a, const string &prefix);
-  // void print_descendant(ofstream &oFile, vector<SimpleSelector> &descendants, const string &prefix);
+  void print_selectors(ofstream &oFile, vector<selector> &descendants, const string &prefix);
 
   void feed(string); // feed the CSS string to the class
   void parse_rules();
@@ -165,26 +165,9 @@ void CSSParser::print(ofstream &oFile, rule &rule, const string &prefix = "")
   oFile << prefix << "{" << endl;
 
   // Print selectors
-  oFile << prefix << INDENT << "\"selectors\": [" << endl; // Additional indentation
-  for (size_t i = 0; i < s.size(); i++)
-  {
-    selector &sel = s[i];
-    oFile << prefix << INDENT << INDENT << "{" << endl;
-    oFile << prefix << INDENT << INDENT << INDENT << "\"tag_name\": \"" << sel.tag_name << "\"," << std::endl;
-    oFile << prefix << INDENT << INDENT << INDENT << "\"id\": \"" << sel.id << "\"," << std::endl;
-    oFile << prefix << INDENT << INDENT << INDENT << "\"_class\": [";
 
-    for (size_t j = 0; j < sel._class.size(); j++)
-    {
-      oFile << "\"" << sel._class[j] << "\"";
-      if (j < sel._class.size() - 1)
-      {
-        oFile << prefix << ",";
-      }
-    }
-    oFile << "]" << endl;
-    oFile << prefix << INDENT << INDENT << (i < s.size() - 1 ? "}," : "}") << std::endl; // Close selector object
-  }
+  oFile << prefix << INDENT << "\"selectors\": [";
+  print_selectors(oFile, s, prefix);
   oFile << prefix << INDENT << "]," << endl;
 
   // Print declarations
@@ -200,6 +183,41 @@ void CSSParser::print(ofstream &oFile, rule &rule, const string &prefix = "")
   oFile << prefix << INDENT << "]" << endl;
 
   oFile << prefix << "}"; // No newline here to handle comma placement in the parent print function
+}
+
+void CSSParser::print_selectors(ofstream &oFile, vector<selector> &s, const string &prefix)
+{
+  for (size_t i = 0; i < s.size(); i++)
+  {
+    selector &sel = s[i];
+    oFile << endl;
+    oFile << prefix << INDENT << INDENT << "{" << endl;
+    oFile << prefix << INDENT << INDENT << INDENT << "\"tag_name\": \"" << sel.tag_name << "\"," << std::endl;
+    oFile << prefix << INDENT << INDENT << INDENT << "\"id\": \"" << sel.id << "\"," << std::endl;
+    oFile << prefix << INDENT << INDENT << INDENT << "\"_class\": [";
+
+    for (size_t j = 0; j < sel._class.size(); j++)
+    {
+      oFile << "\"" << sel._class[j] << "\"";
+      if (j < sel._class.size() - 1)
+      {
+        oFile << ", ";
+      }
+    }
+    oFile << "]," << endl;
+
+    // Print selectors
+    oFile << prefix << INDENT << INDENT << INDENT << "\"descendants\": [";
+
+    if (!sel.descendants.empty())
+    {
+      print_selectors(oFile, sel.descendants, prefix + INDENT + INDENT);
+      oFile << prefix << INDENT << INDENT << INDENT;
+    }
+    oFile << "]" << endl;
+
+    oFile << prefix << INDENT << INDENT << (i < s.size() - 1 ? "}," : "}") << std::endl; // Close selector object
+  }
 }
 
 void CSSParser::print_atrule(ofstream &oFile, const atrule &a, const string &prefix = "")
@@ -299,9 +317,6 @@ vector<selector> CSSParser::parse_selectors()
     }
   }
 
-  // // Return selectors with highest specificity first, for use in matching.
-  // selectors.sort_by(| a, b | b.specificity().cmp(&a.specificity()));
-
   return selectors;
 }
 
@@ -324,7 +339,6 @@ atrule CSSParser::parse_atrule()
   consume_char(); // Consume the '{'
 
   // Parse inner entities while the buffer doesn't reach a closing '}'
-
   while (next() != '}')
   {
 
@@ -385,6 +399,21 @@ selector CSSParser::parse_selector()
     {
       break;
     }
+  }
+
+  // Check for descendants
+  while (true)
+  {
+    consume_void(); // Eat up whitespace
+
+    if (next() == ',' || next() == '{')
+    {
+      // Stop parsing if next character is ',' or '{' (end of selector or start of declaration block)
+      break;
+    }
+
+    selector descendant = parse_selector(); // Recursive call to handle the next selector in the sequence
+    currentSelector.descendants.push_back(descendant);
   }
 
   return currentSelector;

@@ -1,12 +1,269 @@
 {
-  "total_rules": 5,
+  "total_rules": 11,
   "entities": [
+    {
+      "selectors": [
+        {
+          "tag_name": "h1",
+          "id": "",
+          "_class": [],
+          "descendants": [
+            {
+              "tag_name": "",
+              "id": "",
+              "_class": [],
+              "descendants": []
+            }
+          ]
+        }
+      ],
+      "declarations": [
+        {
+          "name": "display",
+          "value": "none"
+        }
+      ]
+    },
+    {
+      "selectors": [
+        {
+          "tag_name": "p",
+          "id": "",
+          "_class": [],
+          "descendants": [
+            {
+              "tag_name": "a",
+              "id": "",
+              "_class": [],
+              "descendants": [
+                {
+                  "tag_name": "",
+                  "id": "",
+                  "_class": [],
+                  "descendants": []
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "declarations": [
+        {
+          "name": "display",
+          "value": "none"
+        }
+      ]
+    },
     {
       "selectors": [
         {
           "tag_name": "div",
           "id": "",
-          "_class": []
+          "_class": [],
+          "descendants": [
+            {
+              "tag_name": "p",
+              "id": "",
+              "_class": [],
+              "descendants": [
+                {
+                  "tag_name": "a",
+                  "id": "",
+                  "_class": [],
+                  "descendants": [
+                    {
+                      "tag_name": "",
+                      "id": "",
+                      "_class": [],
+                      "descendants": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "declarations": [
+        {
+          "name": "display",
+          "value": "none"
+        }
+      ]
+    },
+    {
+      "selectors": [
+        {
+          "tag_name": "",
+          "id": "id",
+          "_class": [],
+          "descendants": [
+            {
+              "tag_name": "",
+              "id": "",
+              "_class": [],
+              "descendants": []
+            }
+          ]
+        }
+      ],
+      "declarations": [
+        {
+          "name": "display",
+          "value": "none"
+        }
+      ]
+    },
+    {
+      "selectors": [
+        {
+          "tag_name": "",
+          "id": "id",
+          "_class": [],
+          "descendants": [
+            {
+              "tag_name": "a",
+              "id": "",
+              "_class": [],
+              "descendants": [
+                {
+                  "tag_name": "",
+                  "id": "",
+                  "_class": [],
+                  "descendants": []
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "declarations": [
+        {
+          "name": "display",
+          "value": "none"
+        }
+      ]
+    },
+    {
+      "selectors": [
+        {
+          "tag_name": "",
+          "id": "",
+          "_class": ["class"],
+          "descendants": [
+            {
+              "tag_name": "",
+              "id": "",
+              "_class": [],
+              "descendants": []
+            }
+          ]
+        }
+      ],
+      "declarations": [
+        {
+          "name": "display",
+          "value": "none"
+        }
+      ]
+    },
+    {
+      "selectors": [
+        {
+          "tag_name": "",
+          "id": "",
+          "_class": ["class1", "class2", "class3"],
+          "descendants": [
+            {
+              "tag_name": "",
+              "id": "",
+              "_class": [],
+              "descendants": []
+            }
+          ]
+        }
+      ],
+      "declarations": [
+        {
+          "name": "display",
+          "value": "none"
+        }
+      ]
+    },
+    {
+      "selectors": [
+        {
+          "tag_name": "",
+          "id": "",
+          "_class": ["class1", "class2", "class3"],
+          "descendants": [
+            {
+              "tag_name": "a",
+              "id": "",
+              "_class": [],
+              "descendants": [
+                {
+                  "tag_name": "",
+                  "id": "",
+                  "_class": [],
+                  "descendants": []
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "declarations": [
+        {
+          "name": "display",
+          "value": "none"
+        }
+      ]
+    },
+    {
+      "selectors": [
+        {
+          "tag_name": "div",
+          "id": "id",
+          "_class": ["class"],
+          "descendants": [
+            {
+              "tag_name": "",
+              "id": "",
+              "_class": [],
+              "descendants": []
+            }
+          ]
+        }
+      ],
+      "declarations": [
+        {
+          "name": "display",
+          "value": "none"
+        }
+      ]
+    },
+    {
+      "selectors": [
+        {
+          "tag_name": "div",
+          "id": "id",
+          "_class": ["class"],
+          "descendants": [
+            {
+              "tag_name": "a",
+              "id": "",
+              "_class": ["class1", "class2", "class3"],
+              "descendants": [
+                {
+                  "tag_name": "",
+                  "id": "",
+                  "_class": [],
+                  "descendants": []
+                }
+              ]
+            }
+          ]
         }
       ],
       "declarations": [
@@ -21,97 +278,39 @@
         {
           "tag_name": "h1",
           "id": "",
-          "_class": []
+          "_class": [],
+          "descendants": []
         },
+
         {
           "tag_name": "h2",
           "id": "",
-          "_class": []
+          "_class": [],
+          "descendants": []
         },
+
         {
           "tag_name": "h3",
           "id": "",
-          "_class": []
+          "_class": [],
+          "descendants": [
+            {
+              "tag_name": "",
+              "id": "",
+              "_class": [],
+              "descendants": []
+            }
+          ]
         }
       ],
       "declarations": [
         {
           "name": "margin",
-          "value": "auto  "
+          "value": "auto  auto "
         },
         {
           "name": "color",
           "value": "#cc0000"
-        }
-      ]
-    },
-    {
-      "selectors": [
-        {
-          "tag_name": "div",
-          "id": "",
-          "_class": ["note"]
-        }
-      ],
-      "declarations": [
-        {
-          "name": "margin-bottom",
-          "value": "20px"
-        },
-        {
-          "name": "padding",
-          "value": "10px"
-        }
-      ]
-    },
-    {
-      "selectors": [
-        {
-          "tag_name": "",
-          "id": "answer",
-          "_class": []
-        }
-      ],
-      "declarations": [
-        {
-          "name": "display",
-          "value": "none"
-        }
-      ]
-    },
-    {
-      "keyword": "media",
-      "value": "only screen and (max-width: 600px) ",
-      "content": [
-        {
-          "selectors": [
-            {
-              "tag_name": "body",
-              "id": "",
-              "_class": []
-            }
-          ],
-          "declarations": [
-            {
-              "name": "background-color",
-              "value": "lightblue"
-            }
-          ]
-        },
-        {
-          "selectors": [
-            {
-              "tag_name": "h1",
-              "id": "",
-              "_class": []
-            }
-          ],
-          "declarations": [
-            {
-              "name": "background-color",
-              "value": "lightblue"
-            }
-          ]
         }
       ]
     },
@@ -124,30 +323,52 @@
             {
               "tag_name": "h1",
               "id": "",
-              "_class": []
+              "_class": [],
+              "descendants": [
+                {
+                  "tag_name": "",
+                  "id": "",
+                  "_class": [],
+                  "descendants": []
+                }
+              ]
             }
           ],
           "declarations": [
             {
-              "name": "color",
-              "value": "red"
+              "name": "display",
+              "value": "none"
             }
           ]
         }
       ]
     },
     {
-      "selectors": [
+      "keyword": "media",
+      "value": "only screen and (max-width: 600px) ",
+      "content": [
         {
-          "tag_name": "h3",
-          "id": "",
-          "_class": []
-        }
-      ],
-      "declarations": [
-        {
-          "name": "background-color",
-          "value": "lightblue"
+          "selectors": [
+            {
+              "tag_name": "h1",
+              "id": "",
+              "_class": [],
+              "descendants": [
+                {
+                  "tag_name": "",
+                  "id": "",
+                  "_class": [],
+                  "descendants": []
+                }
+              ]
+            }
+          ],
+          "declarations": [
+            {
+              "name": "display",
+              "value": "none"
+            }
+          ]
         }
       ]
     }
