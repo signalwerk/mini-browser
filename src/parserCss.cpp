@@ -20,15 +20,28 @@ struct declaration
   string value;
 };
 
-struct rule
+// Base class to represent any CSS entity (rule or atrule)
+struct CSSEntity
+{
+  virtual ~CSSEntity() = default; // virtual destructor for safe deletion
+};
+
+struct rule : CSSEntity
 {
   vector<selector> selectors;
   vector<declaration> declarations;
 };
 
+struct atrule : CSSEntity
+{
+  string keyword;
+  string value;
+  vector<CSSEntity *> innerEntities; // Store nested rules and atrules
+};
+
 struct stylesheet
 {
-  vector<rule> rules;
+  vector<CSSEntity *> entities; // Will contain both rules and atrules
 };
 
 // enum selector {
@@ -42,12 +55,16 @@ class CSSParser : public Parser
 
 public:
   CSSParser();                             // constructor
+  ~CSSParser();                            // destructor
   void print(ofstream &oFile);             // std out print
   void print(ofstream &oFile, rule &rule); // std out print
+  void print_atrule(ofstream &oFile, const atrule &a);
 
   void feed(string); // feed the CSS string to the class
-  vector<rule> parse_rules();
+  void parse_rules();
   rule parse_rule(); // Parse a single rule
+  atrule parse_atrule();
+
   vector<selector> parse_selectors();
 
   selector parse_selector();
@@ -65,32 +82,46 @@ void CSSParser::feed(string css)
 {
   cout << "CSS feeded" << endl;
   input = css;
-  stylesheet.rules = parse_rules();
+  parse_rules();
 
   cout << "end css parser " << endl;
 }
 
 void CSSParser::print(ofstream &oFile)
 {
-  oFile << "{" << endl;
-  oFile << "  \"total_rules\": " << stylesheet.rules.size() << "," << endl;
-  oFile << "  \"rules\": [" << endl;
-
-  for (size_t i = 0; i < stylesheet.rules.size(); i++)
+  size_t ruleCount = 0;
+  for (auto entity : stylesheet.entities)
   {
-    oFile << "    "; // Indent each rule
-    print(oFile, stylesheet.rules[i]);
-    if (i < stylesheet.rules.size() - 1)
+    if (dynamic_cast<rule *>(entity))
     {
-      oFile << "," << endl;
-    }
-    else
-    {
-      oFile << endl;
+      ++ruleCount;
     }
   }
 
-  oFile << "  ]" << endl;
+  oFile << "{" << endl;
+  oFile << "  \"total_rules\": " << ruleCount << "," << endl;
+  oFile << "  \"entities\": [" << endl;
+
+  for (size_t i = 0; i < stylesheet.entities.size(); ++i)
+  {
+
+    if (i != 0)
+      oFile << "," << endl; // Separate entities with commas
+
+    oFile << "    "; // Indent each rule
+
+    if (auto r = dynamic_cast<rule *>(stylesheet.entities[i]))
+    {
+      print(oFile, *r);
+    }
+    else if (auto a = dynamic_cast<atrule *>(stylesheet.entities[i]))
+    {
+      print_atrule(oFile, *a);
+    }
+  }
+
+  oFile << endl
+        << "  ]" << endl;
   oFile << "}" << endl;
 }
 
@@ -134,23 +165,53 @@ void CSSParser::print(ofstream &oFile, rule &rule)
   oFile << "    }"; // No newline here to handle comma placement in the parent print function
 }
 
-/// Parse a sequence of rules.
-vector<rule> CSSParser::parse_rules()
+void CSSParser::print_atrule(ofstream &oFile, const atrule &a)
 {
+  oFile << "{ \"@\" : \"" << a.keyword << "\", \"value\": \"" << a.value << "\"";
 
-  vector<rule> rules;
+  // Check if the atrule has inner content
+  if (!a.innerEntities.empty())
+  {
+    {
+      oFile << ", \"content\": [";
+      for (size_t i = 0; i < a.innerEntities.size(); ++i)
+      {
+        if (i != 0)
+          oFile << "," << endl;
 
+        if (auto r = dynamic_cast<rule *>(a.innerEntities[i]))
+        {
+          print(oFile, *r);
+        }
+        else if (auto innerA = dynamic_cast<atrule *>(a.innerEntities[i]))
+        {
+          print_atrule(oFile, *innerA);
+        }
+      }
+      oFile << "]";
+    }
+
+    oFile << "}";
+  }
+}
+
+/// Parse a sequence of rules.
+void CSSParser::parse_rules()
+{
   for (;;)
   {
     consume_whitespace();
-    if (eof())
+    if (buffer[0] == '@')
+    {
+      stylesheet.entities.push_back(new atrule(parse_atrule()));
+      continue;
+    }
+    else if (eof())
     {
       break;
     }
-    rules.push_back(parse_rule());
+    stylesheet.entities.push_back(new rule(parse_rule()));
   }
-
-  return rules;
 }
 
 /// Parse a rule set: `<selectors> { <declarations> }`.
@@ -202,6 +263,72 @@ vector<selector> CSSParser::parse_selectors()
   // selectors.sort_by(| a, b | b.specificity().cmp(&a.specificity()));
 
   return selectors;
+}
+
+atrule CSSParser::parse_atrule()
+{
+  atrule a;
+  // Consume '@'
+  consume_char();
+
+  // Parse the keyword
+  a.keyword = parse_identifier();
+  consume_whitespace();
+
+  // Parse the value
+  for (;;)
+  {
+
+    if (buffer.length() == 0)
+    {
+      read();
+    }
+
+    if (buffer[0] != '{')
+    {
+      a.value += consume_char();
+    }
+    else
+    {
+      break;
+    }
+  }
+
+  consume_char(); // Consume the '{'
+
+  // Parse inner entities while the buffer doesn't reach a closing '}'
+
+  for (;;)
+  {
+
+    if (buffer.length() == 0)
+    {
+      read();
+    }
+
+    if (buffer[0] != '}')
+    {
+      consume_whitespace();
+
+      if (buffer[0] == '@')
+      {
+        a.innerEntities.push_back(new atrule(parse_atrule()));
+      }
+      else
+      {
+        a.innerEntities.push_back(new rule(parse_rule()));
+      }
+      consume_whitespace();
+    }
+    else
+    {
+      break;
+    }
+  }
+
+  consume_char();
+
+  return a;
 }
 
 selector CSSParser::parse_selector()
@@ -374,6 +501,14 @@ declaration CSSParser::parse_declaration()
   }
 
   return dec;
+}
+
+CSSParser::~CSSParser()
+{
+  for (auto entity : stylesheet.entities)
+  {
+    delete entity;
+  }
 }
 
 #endif

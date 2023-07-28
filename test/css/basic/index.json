@@ -1,6 +1,6 @@
 {
   "total_rules": 4,
-  "rules": [
+  "entities": [
     {
       "selectors": [
         {
@@ -46,6 +46,50 @@
       ],
       "declarations": [
         {"name": "display", "value": "none"}
+      ]
+    },
+    { "@" : "media", "value": "only screen and (max-width: 600px) ", "content": [{
+      "selectors": [
+        {
+          "tag_name": "body",
+          "id": "",
+          "_class": []        }
+      ],
+      "declarations": [
+        {"name": "background-color", "value": "lightblue"}
+      ]
+    },
+{
+      "selectors": [
+        {
+          "tag_name": "h1",
+          "id": "",
+          "_class": []        }
+      ],
+      "declarations": [
+        {"name": "background-color", "value": "lightblue"}
+      ]
+    }]},
+    { "@" : "three-dee", "value": "", "content": [{
+      "selectors": [
+        {
+          "tag_name": "h1",
+          "id": "",
+          "_class": []        }
+      ],
+      "declarations": [
+        {"name": "color", "value": "red"}
+      ]
+    }]},
+    {
+      "selectors": [
+        {
+          "tag_name": "h3",
+          "id": "",
+          "_class": []        }
+      ],
+      "declarations": [
+        {"name": "background-color", "value": "lightblue"}
       ]
     }
   ]

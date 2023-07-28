@@ -11,3 +11,22 @@ div.note {
 #answer {
   display: none;
 }
+
+@media only screen and (max-width: 600px) {
+  body {
+    background-color: lightblue;
+  }
+  h1 {
+    background-color: lightblue;
+  }
+}
+
+@three-dee {
+  h1 {
+    color: red;
+  }
+}
+
+h3 {
+  background-color: lightblue;
+}
