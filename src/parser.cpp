@@ -8,7 +8,8 @@
 
 #define DEBUG_BASICS
 
-class Parser {
+class Parser
+{
 
 protected:
   unsigned int pos; // position of the parser
@@ -28,15 +29,18 @@ public:
 Parser::Parser() { pos = 0; }
 
 /// Does the current input start with the given string?
-bool Parser::starts_with(string s) {
+bool Parser::starts_with(string s)
+{
 
   // read missing characters to compare
-  for (int i = s.length() - buffer.length(); !eof() && i > 0; i--) {
+  for (int i = s.length() - buffer.length(); !eof() && i > 0; i--)
+  {
     read();
   }
 
   // comparison
-  if (buffer.length() >= s.length() && s == buffer.substr(0, s.length())) {
+  if (buffer.length() >= s.length() && s == buffer.substr(0, s.length()))
+  {
 #ifndef DEBUG_BASICS
     cout << "starts_with found: " << s << endl;
 #endif
@@ -54,26 +58,33 @@ bool Parser::starts_with(string s) {
 bool Parser::eof() { return pos >= input.length(); }
 
 // skip whitespace
-void Parser::consume_whitespace() {
-  for (;;) {
+void Parser::consume_whitespace()
+{
+  for (;;)
+  {
     read();
     // if(buffer.length() > 0 && buffer[0] == ' ') {
-    if (buffer.length() > 0 && isspace(static_cast<unsigned char>(buffer[0]))) {
+    if (buffer.length() > 0 && isspace(static_cast<unsigned char>(buffer[0])))
+    {
 
 #ifndef DEBUG_BASICS
       std::cout << "skip whitespace" << std::endl;
 #endif
 
       buffer.erase(0, 1);
-    } else {
+    }
+    else
+    {
       break;
     }
   }
 }
 
 // read one char into the buffer
-string Parser::read() {
-  if (!eof()) {
+string Parser::read()
+{
+  if (!eof())
+  {
     buffer += input[pos];
     pos++;
   }
@@ -82,14 +93,17 @@ string Parser::read() {
 }
 
 /// Return the current character
-string Parser::consume_char() {
+string Parser::consume_char()
+{
 
   // is buffer empty?
-  if (buffer.length() == 0) {
+  if (buffer.length() == 0)
+  {
     read();
   }
 
-  if (buffer.length() > 0) {
+  if (buffer.length() > 0)
+  {
     string returnStr(buffer, 0, 1); // get first char
     buffer.erase(0, 1);
     return returnStr;

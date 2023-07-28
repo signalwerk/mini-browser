@@ -7,23 +7,27 @@
 #include <string>
 #include <vector>
 
-struct selector {
+struct selector
+{
   string tag_name;
   string id;
   vector<string> _class;
 };
 
-struct declaration {
+struct declaration
+{
   string name;
   string value;
 };
 
-struct rule {
+struct rule
+{
   vector<selector> selectors;
   vector<declaration> declarations;
 };
 
-struct stylesheet {
+struct stylesheet
+{
   vector<rule> rules;
 };
 
@@ -31,7 +35,8 @@ struct stylesheet {
 //     Simple(Simpleselector),
 // }
 
-class CSSParser : public Parser {
+class CSSParser : public Parser
+{
 
   stylesheet stylesheet; // parsed DOM (result of parser)
 
@@ -56,7 +61,8 @@ public:
 
 CSSParser::CSSParser() { pos = 0; }
 
-void CSSParser::feed(string css) {
+void CSSParser::feed(string css)
+{
   cout << "CSS feeded" << endl;
   input = css;
   stylesheet.rules = parse_rules();
@@ -64,24 +70,28 @@ void CSSParser::feed(string css) {
   cout << "end css parser " << endl;
 }
 
-void CSSParser::print(ofstream &oFile) {
+void CSSParser::print(ofstream &oFile)
+{
 
   oFile << "Total rules: : " << stylesheet.rules.size() << endl;
 
-  for (rule &r : stylesheet.rules) {
+  for (rule &r : stylesheet.rules)
+  {
     print(oFile, r);
   }
 
   oFile << "]" << endl;
 }
 
-void CSSParser::print(ofstream &oFile, rule &rule) {
+void CSSParser::print(ofstream &oFile, rule &rule)
+{
 
   vector<selector> &s = rule.selectors;
 
   oFile << "selectors: [" << endl;
 
-  for (selector &sel : s) {
+  for (selector &sel : s)
+  {
     oFile << "  tag_name:" << sel.tag_name << std::endl;
     oFile << "  id:" << sel.id << std::endl;
     oFile << "  _class:" << std::endl;
@@ -90,13 +100,16 @@ void CSSParser::print(ofstream &oFile, rule &rule) {
 }
 
 /// Parse a sequence of rules.
-vector<rule> CSSParser::parse_rules() {
+vector<rule> CSSParser::parse_rules()
+{
 
   vector<rule> rules;
 
-  for (;;) {
+  for (;;)
+  {
     consume_whitespace();
-    if (eof()) {
+    if (eof())
+    {
       break;
     }
     rules.push_back(parse_rule());
@@ -106,7 +119,8 @@ vector<rule> CSSParser::parse_rules() {
 }
 
 /// Parse a rule set: `<selectors> { <declarations> }`.
-rule CSSParser::parse_rule() {
+rule CSSParser::parse_rule()
+{
   std::cout << "parse_rule css" << std::endl;
 
   rule rule;
@@ -117,20 +131,24 @@ rule CSSParser::parse_rule() {
 }
 
 /// Parse a comma-separated list of selectors.
-vector<selector> CSSParser::parse_selectors() {
+vector<selector> CSSParser::parse_selectors()
+{
   vector<selector> selectors;
 
-  for (;;) {
+  for (;;)
+  {
     std::cout << "consume selectors" << std::endl;
     selectors.push_back(parse_selector());
     consume_whitespace();
 
-    if (buffer[0] == ',') {
+    if (buffer[0] == ',')
+    {
       consume_char();
       consume_whitespace();
     }
 
-    if (buffer[0] == '{') {
+    if (buffer[0] == '{')
+    {
 
       consume_char();
       consume_whitespace();
@@ -139,7 +157,8 @@ vector<selector> CSSParser::parse_selectors() {
       // throw std::runtime_error("Unexpected character {} in selector list");
     }
 
-    if (eof()) {
+    if (eof())
+    {
       break;
     }
   }
@@ -150,7 +169,8 @@ vector<selector> CSSParser::parse_selectors() {
   return selectors;
 }
 
-selector CSSParser::parse_selector() {
+selector CSSParser::parse_selector()
+{
 
   selector selector;
 
@@ -158,20 +178,25 @@ selector CSSParser::parse_selector() {
 
   consume_whitespace();
 
-  if (buffer[0] == '#') {
+  if (buffer[0] == '#')
+  {
 
     consume_char();
     selector.id = parse_identifier();
-
-  } else if (buffer[0] == '.') {
+  }
+  else if (buffer[0] == '.')
+  {
 
     consume_char();
     selector._class.push_back(parse_identifier());
-
-  } else if (buffer[0] == '*') {
+  }
+  else if (buffer[0] == '*')
+  {
     // universal selector
     consume_char();
-  } else {
+  }
+  else
+  {
 
     // todo valid_identifier_char(c)
     // throw std::runtime_error("Unexpected character {} in selector list");
@@ -181,21 +206,27 @@ selector CSSParser::parse_selector() {
   return selector;
 }
 
-string CSSParser::parse_identifier() {
+string CSSParser::parse_identifier()
+{
   std::cout << "parse identifier" << std::endl;
 
   string identifier;
 
-  for (;;) {
+  for (;;)
+  {
 
-    if (buffer.length() == 0) {
+    if (buffer.length() == 0)
+    {
       read();
     }
 
     if (isdigit(buffer[0]) || isalpha(buffer[0]) || buffer[0] == '-' ||
-        buffer[0] == '_') {
+        buffer[0] == '_')
+    {
       identifier += consume_char();
-    } else {
+    }
+    else
+    {
       break;
     }
   }
@@ -204,21 +235,27 @@ string CSSParser::parse_identifier() {
   return identifier;
 }
 
-string CSSParser::parse_attr() {
+string CSSParser::parse_attr()
+{
   std::cout << "parse attr" << std::endl;
 
   string attr;
 
-  for (;;) {
+  for (;;)
+  {
 
-    if (buffer.length() == 0) {
+    if (buffer.length() == 0)
+    {
       read();
     }
 
     if (isdigit(buffer[0]) || isalpha(buffer[0]) || buffer[0] == '-' ||
-        buffer[0] == '_') {
+        buffer[0] == '_')
+    {
       attr += consume_char();
-    } else {
+    }
+    else
+    {
       break;
     }
   }
@@ -227,20 +264,26 @@ string CSSParser::parse_attr() {
   return attr;
 }
 
-string CSSParser::parse_value() {
+string CSSParser::parse_value()
+{
   std::cout << "parse val" << std::endl;
 
   string val;
 
-  for (;;) {
+  for (;;)
+  {
 
-    if (buffer.length() == 0) {
+    if (buffer.length() == 0)
+    {
       read();
     }
 
-    if (buffer[0] != ';') {
+    if (buffer[0] != ';')
+    {
       val += consume_char();
-    } else {
+    }
+    else
+    {
       break;
     }
   }
@@ -249,21 +292,25 @@ string CSSParser::parse_value() {
   return val;
 }
 
-vector<declaration> CSSParser::parse_declarations() {
+vector<declaration> CSSParser::parse_declarations()
+{
 
   std::cout << " parse declarations" << std::endl;
 
   vector<declaration> declarations;
 
-  for (;;) {
+  for (;;)
+  {
     consume_whitespace();
-    if (buffer[0] == '}') {
+    if (buffer[0] == '}')
+    {
       consume_char();
       break;
     }
     declarations.push_back(parse_declaration());
 
-    if (eof()) {
+    if (eof())
+    {
       break;
     }
   }
@@ -271,12 +318,14 @@ vector<declaration> CSSParser::parse_declarations() {
   return declarations;
 }
 
-declaration CSSParser::parse_declaration() {
+declaration CSSParser::parse_declaration()
+{
   declaration dec;
   dec.name = parse_attr();
 
   consume_whitespace();
-  if (consume_char() != ":") {
+  if (consume_char() != ":")
+  {
     throw std::runtime_error("attribute needs to end with :");
   }
 
@@ -284,7 +333,8 @@ declaration CSSParser::parse_declaration() {
   dec.value = parse_value();
   consume_whitespace();
 
-  if (consume_char() != ";") {
+  if (consume_char() != ";")
+  {
     throw std::runtime_error("value needs to end with ;");
   }
 

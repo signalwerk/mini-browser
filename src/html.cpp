@@ -6,7 +6,8 @@
 
 #include <fstream> // std::ofstream
 
-class Html {
+class Html
+{
   int width, height;
   HTMLParser parser;
 
@@ -16,7 +17,8 @@ public:
   void print(std::ofstream &);
 };
 
-void Html::setViewport(int w, int h) {
+void Html::setViewport(int w, int h)
+{
   width = w;
   height = h;
 }

@@ -4,7 +4,8 @@
 #include "parserCss.cpp"
 #include <string>
 
-class Css {
+class Css
+{
   CSSParser parser;
 
 public:

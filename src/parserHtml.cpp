@@ -7,7 +7,8 @@
 #include <string>
 #include <vector>
 
-class HTMLParser : public Parser {
+class HTMLParser : public Parser
+{
 
   std::vector<Dom> nodes; // parsed DOM (result of parser)
 
@@ -15,10 +16,10 @@ public:
   HTMLParser();                // constructor
   void print(ofstream &oFile); // std out print
   void feed(string);           // feed the HTML string to the class
-  vector<Dom> parse_nodes(); // Parse the html document -> nodes = root element
-  Dom parse_node();          // parse current node
-  Dom parse_element();       // Parse a single element, including its open tag,
-                             // contents, and closing tag.
+  vector<Dom> parse_nodes();   // Parse the html document -> nodes = root element
+  Dom parse_node();            // parse current node
+  Dom parse_element();         // Parse a single element, including its open tag,
+                               // contents, and closing tag.
   string parse_tag_name();
   string parse_text();
   std::map<std::string, std::string> parse_attributes();
@@ -28,13 +29,15 @@ public:
 
 HTMLParser::HTMLParser() { pos = 0; }
 
-void HTMLParser::feed(string html) {
+void HTMLParser::feed(string html)
+{
   cout << "HTML feeded" << endl;
   input = html;
   nodes = parse_nodes();
 }
 
-void HTMLParser::print(ofstream &oFile) {
+void HTMLParser::print(ofstream &oFile)
+{
 
   // print now the result
   // for (Dom &e : nodes) {
@@ -47,18 +50,21 @@ void HTMLParser::print(ofstream &oFile) {
 }
 
 /// Parse a sequence of sibling nodes.
-vector<Dom> HTMLParser::parse_nodes() {
+vector<Dom> HTMLParser::parse_nodes()
+{
 
   vector<Dom> lNodes;
 
-  for (;;) {
+  for (;;)
+  {
 
     std::cout << "consume" << std::endl;
 
     // consume leading whitespace
     consume_whitespace();
 
-    if (eof() || starts_with("</")) {
+    if (eof() || starts_with("</"))
+    {
       break;
     }
 
@@ -71,18 +77,22 @@ vector<Dom> HTMLParser::parse_nodes() {
   return lNodes;
 }
 
-Dom HTMLParser::parse_node() {
+Dom HTMLParser::parse_node()
+{
 
-  if (buffer.length() == 0) {
+  if (buffer.length() == 0)
+  {
     read();
   }
 
   Dom dom;
-  if (buffer[0] == '<') {
+  if (buffer[0] == '<')
+  {
     dom = parse_element();
     dom.type(static_cast<int>(DomType::ELEMENT));
-
-  } else {
+  }
+  else
+  {
     std::cout << "start parse text" << std::endl;
     dom.type(static_cast<int>(DomType::TEXT));
     dom.text(parse_text());
@@ -91,20 +101,26 @@ Dom HTMLParser::parse_node() {
   return dom;
 }
 
-string HTMLParser::parse_tag_name() {
+string HTMLParser::parse_tag_name()
+{
 
   string tagname;
 
-  for (;;) {
+  for (;;)
+  {
 
-    if (buffer.length() == 0) {
+    if (buffer.length() == 0)
+    {
       read();
     }
 
     // if(buffer.length() > 0 && buffer[0] == ' ') {
-    if (isdigit(buffer[0]) || isalpha(buffer[0])) {
+    if (isdigit(buffer[0]) || isalpha(buffer[0]))
+    {
       tagname += consume_char();
-    } else {
+    }
+    else
+    {
       break;
     }
   }
@@ -112,20 +128,26 @@ string HTMLParser::parse_tag_name() {
   return tagname;
 }
 
-string HTMLParser::parse_text() {
+string HTMLParser::parse_text()
+{
 
   string text;
 
-  for (;;) {
+  for (;;)
+  {
 
-    if (buffer.length() == 0) {
+    if (buffer.length() == 0)
+    {
       read();
     }
 
     // if(buffer.length() > 0 && buffer[0] == ' ') {
-    if (buffer[0] != '<') {
+    if (buffer[0] != '<')
+    {
       text += consume_char();
-    } else {
+    }
+    else
+    {
       break;
     }
   }
@@ -134,14 +156,17 @@ string HTMLParser::parse_text() {
   return text;
 }
 
-std::map<std::string, std::string> HTMLParser::parse_attributes() {
+std::map<std::string, std::string> HTMLParser::parse_attributes()
+{
   std::map<std::string, std::string> attributes;
 
-  for (;;) {
+  for (;;)
+  {
 
     consume_whitespace();
 
-    if (buffer[0] == '>') {
+    if (buffer[0] == '>')
+    {
       break;
     }
 
@@ -151,10 +176,12 @@ std::map<std::string, std::string> HTMLParser::parse_attributes() {
   return attributes;
 }
 
-std::pair<string, string> HTMLParser::parse_attr() {
+std::pair<string, string> HTMLParser::parse_attr()
+{
   string name = parse_tag_name();
 
-  if (consume_char() != "=") {
+  if (consume_char() != "=")
+  {
     throw std::runtime_error("after attribute-name there has to be an =");
   }
   string value = parse_attr_value();
@@ -162,29 +189,37 @@ std::pair<string, string> HTMLParser::parse_attr() {
   return {name, value};
 }
 
-string HTMLParser::parse_attr_value() {
+string HTMLParser::parse_attr_value()
+{
   string open_quote = consume_char();
 
-  if (open_quote[0] != '"' && open_quote[0] != '\'') {
+  if (open_quote[0] != '"' && open_quote[0] != '\'')
+  {
     throw std::runtime_error("attribute values have to be quoted");
   }
 
   string text;
 
-  for (;;) {
+  for (;;)
+  {
 
-    if (buffer.length() == 0) {
+    if (buffer.length() == 0)
+    {
       read();
     }
 
-    if (buffer[0] != open_quote[0]) {
+    if (buffer[0] != open_quote[0])
+    {
       text += consume_char();
-    } else {
+    }
+    else
+    {
       break;
     }
   }
 
-  if (consume_char() != open_quote) {
+  if (consume_char() != open_quote)
+  {
     throw std::runtime_error(
         "attribute values have to start and end with the same quote-style");
   }
@@ -193,11 +228,13 @@ string HTMLParser::parse_attr_value() {
 }
 
 // Parse a single element, including its open tag, contents, and closing tag.
-Dom HTMLParser::parse_element() {
+Dom HTMLParser::parse_element()
+{
 
   Dom dom;
 
-  if (consume_char() != "<") {
+  if (consume_char() != "<")
+  {
     throw std::runtime_error("Tags should start with <");
   }
 
@@ -211,26 +248,30 @@ Dom HTMLParser::parse_element() {
 
   consume_whitespace();
 
-  if (consume_char() != ">") {
+  if (consume_char() != ">")
+  {
     std::cout << "buffer: '" << buffer << "'" << std::endl;
     throw std::runtime_error("Tags should end with >");
   }
 
   dom.children = parse_nodes();
 
-  if (consume_char() != "<") {
+  if (consume_char() != "<")
+  {
     std::cout << "missing closing tag: '" << dom.tagname() << "'" << std::endl;
     throw std::runtime_error("please close tag");
   }
   consume_whitespace();
 
-  if (consume_char() != "/") {
+  if (consume_char() != "/")
+  {
     std::cout << "missing closing tag: '" << dom.tagname() << "'" << std::endl;
     throw std::runtime_error("please close tag");
   }
   consume_whitespace();
 
-  if (parse_tag_name() != dom.tagname()) {
+  if (parse_tag_name() != dom.tagname())
+  {
     std::cout << "closing tag not matching with open tag: '" << dom.tagname()
               << "'" << std::endl;
     throw std::runtime_error("closing tag not matching with open tag");
@@ -238,7 +279,8 @@ Dom HTMLParser::parse_element() {
 
   consume_whitespace();
 
-  if (consume_char() != ">") {
+  if (consume_char() != ">")
+  {
     std::cout << "missing closing tag: '" << dom.tagname() << "'" << std::endl;
     throw std::runtime_error("please close tag");
   }

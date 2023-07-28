@@ -8,9 +8,14 @@
 
 #include <fstream> // std::ofstream
 
-enum class DomType { ELEMENT, TEXT };
+enum class DomType
+{
+  ELEMENT,
+  TEXT
+};
 
-class Dom {
+class Dom
+{
   int _type;
   string name;
   string _text;
@@ -34,33 +39,44 @@ public:
   void attributes(std::map<std::string, std::string> attributes);
 };
 
-void Dom::attributes(std::map<std::string, std::string> attributes) {
+void Dom::attributes(std::map<std::string, std::string> attributes)
+{
   _attributes = attributes;
 }
 
-std::string Dom::get_attribute(std::string name) {
-  if (_attributes.count(name) > 0) {
+std::string Dom::get_attribute(std::string name)
+{
+  if (_attributes.count(name) > 0)
+  {
     return _attributes[name];
-  } else {
+  }
+  else
+  {
     return std::string("");
   }
 }
 
-void Dom::add_attribute(std::string name, std::string value) {
+void Dom::add_attribute(std::string name, std::string value)
+{
   _attributes[name] = value;
 }
 
-Dom::Dom() {
+Dom::Dom()
+{
   // add_attribute("href", "http");
 }
 
-void Dom::print(std::ofstream &oFile, int indent = 0, bool last = false) {
+void Dom::print(std::ofstream &oFile, int indent = 0, bool last = false)
+{
   oFile << string(indent, ' ') << "{" << endl;
 
-  if (_type == static_cast<int>(DomType::TEXT)) {
+  if (_type == static_cast<int>(DomType::TEXT))
+  {
     oFile << string(indent, ' ') << "  \"type\": \"TEXT\"," << endl;
     oFile << string(indent, ' ') << "  \"text\": \"" << _text << "\"" << endl;
-  } else if (_type == static_cast<int>(DomType::ELEMENT)) {
+  }
+  else if (_type == static_cast<int>(DomType::ELEMENT))
+  {
     oFile << string(indent, ' ') << "  \"type\": \"ELEMENT\"," << endl;
     oFile << string(indent, ' ') << "  \"tagname\": \"" << name << "\","
           << endl;
@@ -68,7 +84,8 @@ void Dom::print(std::ofstream &oFile, int indent = 0, bool last = false) {
     oFile << string(indent, ' ') << "  \"attributes\": [" << std::endl;
 
     std::map<std::string, std::string>::iterator it = _attributes.begin();
-    while (it != _attributes.end()) {
+    while (it != _attributes.end())
+    {
       // Accessing KEY from element pointed by it.
       std::string word = it->first;
 
@@ -78,7 +95,8 @@ void Dom::print(std::ofstream &oFile, int indent = 0, bool last = false) {
       oFile << string(indent, ' ') << "    { \"name\": \"" << word
             << "\", \"value\": \"" << count << "\" }";
 
-      if (it != --_attributes.end()) {
+      if (it != --_attributes.end())
+      {
         oFile << ",";
       }
 
@@ -92,11 +110,15 @@ void Dom::print(std::ofstream &oFile, int indent = 0, bool last = false) {
 
     oFile << string(indent, ' ') << "  \"children\": [" << endl;
 
-    for (Dom &e : children) {
+    for (Dom &e : children)
+    {
 
-      if (&e == &children.back()) {
+      if (&e == &children.back())
+      {
         e.print(oFile, indent + 4, true);
-      } else {
+      }
+      else
+      {
         e.print(oFile, indent + 4);
       }
     }
@@ -108,7 +130,8 @@ void Dom::print(std::ofstream &oFile, int indent = 0, bool last = false) {
 
   oFile << string(indent, ' ') << "}";
 
-  if (!last) {
+  if (!last)
+  {
     oFile << ",";
   }
 
