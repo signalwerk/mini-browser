@@ -260,7 +260,7 @@ void CSSParser::parse_rules()
   for (;;)
   {
     consume_void();
-    if (buffer[0] == '@')
+    if (next() == '@')
     {
       stylesheet.entities.push_back(new atrule(parse_atrule()));
       continue;
@@ -309,7 +309,7 @@ atrule CSSParser::parse_atrule()
 
     consume_void();
 
-    if (buffer[0] == '@')
+    if (next() == '@')
     {
       a.innerEntities.push_back(new atrule(parse_atrule()));
     }
@@ -342,13 +342,11 @@ vector<selector> CSSParser::parse_selectors()
     catch (const std::runtime_error &e)
     {
       std::cerr << "Error parsing selector: " << e.what() << std::endl;
+
       // Skip to next selector. You may need additional logic to skip erroneous input.
-      char nextChar = next();
-      while (nextChar != ',' && nextChar != '{' && !eof())
+      while (next() != ',' && next() != '{' && !eof())
       {
         consume_char();
-        // std::cout << "next -- '" << buffer[0] << "'" << std::endl;
-        nextChar = next();
       }
       if (eof())
         break;
@@ -356,13 +354,13 @@ vector<selector> CSSParser::parse_selectors()
 
     consume_void();
 
-    if (buffer[0] == ',')
+    if (next() == ',')
     {
       consume_char();
       consume_void();
     }
 
-    if (buffer[0] == '{')
+    if (next() == '{')
     {
       consume_char();
       consume_void();
@@ -453,13 +451,8 @@ string CSSParser::parse_identifier()
   for (;;)
   {
 
-    if (buffer.length() == 0)
-    {
-      read();
-    }
-
-    if (isdigit(buffer[0]) || isalpha(buffer[0]) || buffer[0] == '-' ||
-        buffer[0] == '_')
+    if (isdigit(next()) || isalpha(next()) || next() == '-' ||
+        next() == '_')
     {
       identifier += consume_char();
     }
@@ -482,13 +475,8 @@ string CSSParser::parse_attr()
   for (;;)
   {
 
-    if (buffer.length() == 0)
-    {
-      read();
-    }
-
-    if (isdigit(buffer[0]) || isalpha(buffer[0]) || buffer[0] == '-' ||
-        buffer[0] == '_')
+    if (isdigit(next()) || isalpha(next()) || next() == '-' ||
+        next() == '_')
     {
       attr += consume_char();
     }
