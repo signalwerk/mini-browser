@@ -65,11 +65,11 @@ public:
   void feed(string); // feed the CSS string to the class
   void parse_rules();
   rule parse_rule(); // Parse a single rule
-  atrule parse_atrule();
 
   vector<selector> parse_selectors();
-
   selector parse_selector();
+  atrule parse_atrule();
+
   vector<declaration> parse_declarations();
 
   declaration parse_declaration();
@@ -167,6 +167,7 @@ void CSSParser::print(ofstream &oFile, rule &rule, const string &prefix = "")
   // Print selectors
 
   oFile << prefix << INDENT << "\"selectors\": [";
+  oFile << endl;
   print_selectors(oFile, s, prefix);
   oFile << prefix << INDENT << "]," << endl;
 
@@ -190,7 +191,6 @@ void CSSParser::print_selectors(ofstream &oFile, vector<selector> &s, const stri
   for (size_t i = 0; i < s.size(); i++)
   {
     selector &sel = s[i];
-    oFile << endl;
     oFile << prefix << INDENT << INDENT << "{" << endl;
     oFile << prefix << INDENT << INDENT << INDENT << "\"tag_name\": \"" << sel.tag_name << "\"," << std::endl;
     oFile << prefix << INDENT << INDENT << INDENT << "\"id\": \"" << sel.id << "\"," << std::endl;
@@ -211,6 +211,7 @@ void CSSParser::print_selectors(ofstream &oFile, vector<selector> &s, const stri
 
     if (!sel.descendants.empty())
     {
+      oFile << endl;
       print_selectors(oFile, sel.descendants, prefix + INDENT + INDENT);
       oFile << prefix << INDENT << INDENT << INDENT;
     }
@@ -284,42 +285,6 @@ rule CSSParser::parse_rule()
   return rule;
 }
 
-/// Parse a comma-separated list of selectors.
-vector<selector> CSSParser::parse_selectors()
-{
-  vector<selector> selectors;
-
-  for (;;)
-  {
-    std::cout << "consume selectors" << std::endl;
-    selectors.push_back(parse_selector());
-    consume_void();
-
-    if (buffer[0] == ',')
-    {
-      consume_char();
-      consume_void();
-    }
-
-    if (buffer[0] == '{')
-    {
-
-      consume_char();
-      consume_void();
-      break;
-
-      // throw std::runtime_error("Unexpected character {} in selector list");
-    }
-
-    if (eof())
-    {
-      break;
-    }
-  }
-
-  return selectors;
-}
-
 atrule CSSParser::parse_atrule()
 {
   atrule a;
@@ -361,6 +326,58 @@ atrule CSSParser::parse_atrule()
   return a;
 }
 
+/// Parse a comma-separated list of selectors.
+vector<selector> CSSParser::parse_selectors()
+{
+  vector<selector> selectors;
+
+  for (;;)
+  {
+    std::cout << "consume selectors" << std::endl;
+
+    try
+    {
+      selectors.push_back(parse_selector());
+    }
+    catch (const std::runtime_error &e)
+    {
+      std::cerr << "Error parsing selector: " << e.what() << std::endl;
+      // Skip to next selector. You may need additional logic to skip erroneous input.
+      char nextChar = next();
+      while (nextChar != ',' && nextChar != '{' && !eof())
+      {
+        consume_char();
+        // std::cout << "next -- '" << buffer[0] << "'" << std::endl;
+        nextChar = next();
+      }
+      if (eof())
+        break;
+    }
+
+    consume_void();
+
+    if (buffer[0] == ',')
+    {
+      consume_char();
+      consume_void();
+    }
+
+    if (buffer[0] == '{')
+    {
+      consume_char();
+      consume_void();
+      break;
+    }
+
+    if (eof())
+    {
+      break;
+    }
+  }
+
+  return selectors;
+}
+
 selector CSSParser::parse_selector()
 {
   selector currentSelector;
@@ -399,9 +416,28 @@ selector CSSParser::parse_selector()
         currentSelector.descendants.push_back(parse_selector());
       }
     }
-    else
+    else if (isalpha(nextChar))
     {
       currentSelector.tag_name = parse_identifier();
+    }
+    else if (nextChar == '[')
+    {
+      throw std::runtime_error("attribute selector not implemented");
+
+      // consume_char();
+      // currentSelector.attrs.push_back(parse_attr());
+    }
+    else if (nextChar == ':')
+    {
+      throw std::runtime_error("pseudo class not implemented");
+
+      // consume_char();
+      // currentSelector.pseudo_classes.push_back(parse_identifier());
+    }
+    else
+    {
+      throw std::runtime_error("Unexpected character in selector");
+      // std::cout << "Unexpected character in selector" << std::endl;
     }
   }
 

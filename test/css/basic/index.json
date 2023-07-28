@@ -1,5 +1,5 @@
 {
-  "total_rules": 11,
+  "total_rules": 12,
   "entities": [
     {
       "selectors": [
@@ -59,6 +59,35 @@
                   "descendants": []
                 }
               ]
+            }
+          ]
+        }
+      ],
+      "declarations": [
+        {
+          "name": "display",
+          "value": "none"
+        }
+      ]
+    },
+    {
+      "selectors": [
+        {
+          "tag_name": "a",
+          "id": "",
+          "_class": [],
+          "descendants": []
+        },
+        {
+          "tag_name": "div",
+          "id": "",
+          "_class": [],
+          "descendants": [
+            {
+              "tag_name": "a",
+              "id": "",
+              "_class": [],
+              "descendants": []
             }
           ]
         }
@@ -211,14 +240,12 @@
           "_class": [],
           "descendants": []
         },
-
         {
           "tag_name": "h2",
           "id": "",
           "_class": [],
           "descendants": []
         },
-
         {
           "tag_name": "h3",
           "id": "",

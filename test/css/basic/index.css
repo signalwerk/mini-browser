@@ -13,6 +13,14 @@ div p a {
   display: none;
 }
 
+/* selectors with pseudo-class */
+a,
+a:visited,
+a:link,
+div a {
+  display: none;
+}
+
 /* id selector */
 #id {
   display: none;
